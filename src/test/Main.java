@@ -1,26 +1,13 @@
 package test;
 
-public class Main {
+import processing.core.PApplet;
+
+public class Main extends PApplet {
 
 		
 	public static void main(String[] args)
 	{
-
-		System.out.println("RONANS BRANCH");
-
-		System.out.println("On davidTesting branch");
-
-		for(int i = 0; i < 100; i ++)
-		{
-			System.out.println("Hello hello!");
-
-		}
-		
-		System.out.println("Hello!!!");
-		for(int i = 0; i < 100; i ++)
-		{
-			System.out.println("MORE BEER!");
-
-		}
+		String[] a = {"MAIN"};
+        PApplet.runSketch( a, new Main());
 	}
 }
