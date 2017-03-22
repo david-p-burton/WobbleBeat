@@ -2,7 +2,7 @@ package test;
 
 import processing.core.PImage;
 import processing.core.PVector;
-i
+
 
 public class Note extends GameObject {
 	
