@@ -8,14 +8,14 @@ public class Main {
 		System.out.println("Hello World");
 		for(int i = 0; i < 100; i ++)
 		{
-			System.out.println("Hello Ronan!");
+			System.out.println("Hello hello!");
 
 		}
 		
 		System.out.println("Hello!!!");
 		for(int i = 0; i < 100; i ++)
 		{
-			System.out.println("BEER!");
+			System.out.println("MORE BEER!");
 
 		}
 	}
