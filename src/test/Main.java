@@ -12,6 +12,7 @@ public class Main extends PApplet {
 	
 	public static void main(String[] args)
 	{
+		//boiler plate code
 		String[] a = {"MAIN"};
         PApplet.runSketch( a, new Main());
 	}
