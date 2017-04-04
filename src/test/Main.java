@@ -5,26 +5,30 @@ import java.util.Random;
 
 import processing.core.PApplet;
 
+ 
+
 public class Main extends PApplet {
 
 	public static final int WIDTH = 512;
 	public static final int HEIGHT = 675;
 	
 	//ArrayLists
-	ArrayList<Note> notes;
+	ArrayList<GameObject> gameObjects;
 	
 	//Objects
 	Note n;
 	
-	//Misc control stuff
+	//Misc control stuff. Is this a good place to put these variables??
 	public static Random rand = new Random();
 	public static int randStartPos; 
 	
 	public void setup()
 	{
 		randStartPos = rand.nextInt(WIDTH) + 1;
-		notes = new ArrayList<Note>();
+		gameObjects = new ArrayList<GameObject>();
 		n = new Note(randStartPos,0, 20, this);
+		
+		gameObjects.add(n);
 	}
 	
 	public void settings()
@@ -34,8 +38,13 @@ public class Main extends PApplet {
 	
 	public void draw()
 	{
-		n.render();
-		n.update();
+		for(int i = 0; i < gameObjects.size();i++)
+		{
+			gameObjects.get(i).update();
+			gameObjects.get(i).render();
+		}
+		
+		
 		
 		
 	}

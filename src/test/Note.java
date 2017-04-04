@@ -29,13 +29,14 @@ public class Note extends GameObject {
 
 	@Override
 	public void render() {
+		//when using any processing code in SEPERATE CLASS FILES. We need to put p.func() to use it
 		p.fill(255);
 		p.ellipse(pos.x,pos.y, size, size);
 	}
 
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
+		//make it fall. This will be based off of tempo??
 		pos.y++;
 	}
 	
