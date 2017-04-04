@@ -1,6 +1,8 @@
 package test;
 
-import processing.core.PVector;
+//import processing.core.PVector;
+//import processing.core.PApplet;
+import processing.core.*;
 
 public abstract class GameObject {
 	

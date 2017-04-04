@@ -1,5 +1,6 @@
 package test;
 
+import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PVector;
 
@@ -8,10 +9,14 @@ public class Note extends GameObject {
 	
 	PImage sprites[];
 	private int animationKey;
+	private PApplet p;
 	
 	
-	public Note(float x, float y, float size)
+	public Note(float x, float y, float size, PApplet p)
 	{
+		//you can only have one class extend PApplet, the main class so we have to pass it to all other classes
+		//so we can use the processing shapes and images etc
+		this.p = p;
 		pos = new PVector(x,y);
 		this.size = size;
 		
@@ -24,8 +29,8 @@ public class Note extends GameObject {
 
 	@Override
 	public void render() {
-		// TODO Auto-generated method stub
-		
+		p.fill(255);
+		p.ellipse(pos.x,pos.y, size, size);
 	}
 
 	@Override
