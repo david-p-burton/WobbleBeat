@@ -1,17 +1,30 @@
 package test;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 import processing.core.PApplet;
 
 public class Main extends PApplet {
 
-	public static final int WIDTH = 1024;
-	public static final int HEIGHT = 512;
+	public static final int WIDTH = 512;
+	public static final int HEIGHT = 675;
 	
+	//ArrayLists
+	ArrayList<Note> notes;
+	
+	//Objects
 	Note n;
+	
+	//Misc control stuff
+	public static Random rand = new Random();
+	public static int randStartPos; 
 	
 	public void setup()
 	{
-		n = new Note(WIDTH/2, HEIGHT/2, 20, this);
+		randStartPos = rand.nextInt(WIDTH) + 1;
+		notes = new ArrayList<Note>();
+		n = new Note(randStartPos,0, 20, this);
 	}
 	
 	public void settings()
@@ -21,8 +34,9 @@ public class Main extends PApplet {
 	
 	public void draw()
 	{
-		n.render();//this does not work
-		//ellipse(WIDTH/2,HEIGHT/2,50,50);//this works..
+		n.render();
+		n.update();
+		
 		
 	}
 	

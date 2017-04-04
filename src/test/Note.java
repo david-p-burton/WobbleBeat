@@ -36,7 +36,17 @@ public class Note extends GameObject {
 	@Override
 	public void update() {
 		// TODO Auto-generated method stub
-		
+		pos.y++;
+	}
+	
+	public float getX()
+	{
+		return pos.x;
+	}
+	
+	public float getY()
+	{
+		return pos.y;
 	}
 
 }
