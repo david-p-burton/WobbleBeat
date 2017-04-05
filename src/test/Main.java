@@ -39,6 +39,7 @@ public class Main extends PApplet {
 		
 		minim = new Minim(this);
 		audioInput = minim.loadSample("Haunted Shores - Scarlet -instrumental-.mp3", FRAME_SIZE);	
+		fft = new FFT(audioInput.bufferSize(),audioInput.sampleRate());
 		
 		
 		
@@ -64,7 +65,7 @@ public class Main extends PApplet {
 	{
 		
 		background(0);
-		processGameObject();
+		//processGameObject();
 		
 		if (keyPressed && key == ' ' && ! lastPressed)
 		{
@@ -75,6 +76,14 @@ public class Main extends PApplet {
 		{
 			lastPressed = false;
 		}
+		
+		fft.forward( audioInput.mix );//mix is stereo left and right
+		for(int i = 0; i < fft.specSize(); i++)
+		 {
+		    // draw the line for frequency band i, scaling it up a bit so we can see it
+			stroke(255);
+		    line( i, height, i, height - fft.getBand(i)*8 );
+		 }
 		
 		
 	}//end draw()
