@@ -32,6 +32,7 @@ public class Main extends PApplet {
 	public static int randStartPos; 
 	public static float timeDelta = 1.0f / 60.0f;
 	public static float noteSpawnTime;
+	private static int freqCount;//increment this each time a "snare" 200hz hits and work out tempo?
 	
 	public void setup()
 	{
@@ -41,7 +42,7 @@ public class Main extends PApplet {
 		audioInput = minim.loadSample("Haunted Shores - Scarlet -instrumental-.mp3", FRAME_SIZE);	
 		fft = new FFT(audioInput.bufferSize(),audioInput.sampleRate());
 		
-		
+		freqCount = 0;
 		
 		//testing 10 notes
 		for(int i = 0;i < 10;i++)
@@ -63,7 +64,7 @@ public class Main extends PApplet {
 	
 	public void draw()
 	{
-		
+		float freqAmplitude;
 		background(0);
 		//processGameObject();
 		
@@ -74,17 +75,42 @@ public class Main extends PApplet {
 		}
 		else
 		{
+			//audioInput.stop();
 			lastPressed = false;
 		}
 		
-		fft.forward( audioInput.mix );//mix is stereo left and right
+		fft.window(FFT.HAMMING);
+		fft.forward( audioInput.left );//mix is stereo left and right
 		for(int i = 0; i < fft.specSize(); i++)
 		 {
+			//freqAmplitude = fft.getFreq(100);//get amplitude of 200hz(roughly snare drum)
+			freqAmplitude = fft.calcAvg(100,200);
+			
+			stroke(255);
+			textSize(25);
+			text("Amplitude of 100hz-200hz " + freqAmplitude,0,height/3);
+			
+			if(freqAmplitude > 125 )
+			{
+				//freqCount++;
+				//System.out.println("SNARE");
+				//fill(0,0,255);
+				//rect(width/2,height/2, 300,300);
+				
+			}
+			else
+			{
+				//System.out.println("-------");
+				//fill(255,0,0);
+				//ellipse(width/2,height/2, 50,50);
+			}
+			
 		    // draw the line for frequency band i, scaling it up a bit so we can see it
 			stroke(255);
-		    line( i, height, i, height - fft.getBand(i)*8 );
+		    //line( i, height, i, height - fft.getBand(i)*8 );
 		 }
 		
+		//System.out.println(freqCount);
 		
 	}//end draw()
 	
