@@ -6,6 +6,7 @@ import java.util.Random;
 import ddf.minim.AudioSample;
 import ddf.minim.Minim;
 import ddf.minim.analysis.FFT;
+import ddf.minim.analysis.BeatDetect;
 import processing.core.PApplet;
 
 public class Main extends PApplet {
@@ -17,6 +18,8 @@ public class Main extends PApplet {
 	Minim minim;
 	AudioSample audioInput;
 	FFT fft;
+	private BeatListener beatListener;
+	private BeatDetect beat;
 	static final int FRAME_SIZE = 2048;
 	static final int SAMPLE_RATE = 44100;
 	
@@ -32,7 +35,7 @@ public class Main extends PApplet {
 	public static int randStartPos; 
 	public static float timeDelta = 1.0f / 60.0f;
 	public static float noteSpawnTime;
-	private static int freqCount;//increment this each time a "snare" 200hz hits and work out tempo?
+
 	
 	public void setup()
 	{
@@ -41,18 +44,20 @@ public class Main extends PApplet {
 		minim = new Minim(this);
 		audioInput = minim.loadSample("Haunted Shores - Scarlet -instrumental-.mp3", FRAME_SIZE);	
 		fft = new FFT(audioInput.bufferSize(),audioInput.sampleRate());
+		beat = new BeatDetect(audioInput.bufferSize(), audioInput.sampleRate());
+		beatListener = new BeatListener(beat, audioInput, this);
+		 beat.setSensitivity(300);  
 		
-		freqCount = 0;
 		
-		//testing 10 notes
-		for(int i = 0;i < 10;i++)
-		{
-			randStartPos = rand.nextInt(WIDTH) + 1;
-			n = new Note(randStartPos,0, 20, this);//this is the PApplet
-			gameObjects.add(n);
-		}
 		
 	}//end setup()
+	
+	public void generateNote()
+	{
+		randStartPos = rand.nextInt(WIDTH) + 1;
+		Note n = new Note(randStartPos,0, 20, this);
+		gameObjects.add(n);
+	}
 	
 	public void settings()
 	{
@@ -64,9 +69,9 @@ public class Main extends PApplet {
 	
 	public void draw()
 	{
-		float freqAmplitude;
+		
 		background(0);
-		//processGameObject();
+		
 		
 		if (keyPressed && key == ' ' && ! lastPressed)
 		{
@@ -80,37 +85,20 @@ public class Main extends PApplet {
 		}
 		
 		fft.window(FFT.HAMMING);
-		fft.forward( audioInput.left );//mix is stereo left and right
-		for(int i = 0; i < fft.specSize(); i++)
-		 {
-			//freqAmplitude = fft.getFreq(100);//get amplitude of 200hz(roughly snare drum)
-			freqAmplitude = fft.calcAvg(100,200);
-			
-			stroke(255);
-			textSize(25);
-			text("Amplitude of 100hz-200hz " + freqAmplitude,0,height/3);
-			
-			if(freqAmplitude > 125 )
-			{
-				//freqCount++;
-				//System.out.println("SNARE");
-				//fill(0,0,255);
-				//rect(width/2,height/2, 300,300);
-				
-			}
-			else
-			{
-				//System.out.println("-------");
-				//fill(255,0,0);
-				//ellipse(width/2,height/2, 50,50);
-			}
-			
-		    // draw the line for frequency band i, scaling it up a bit so we can see it
-			stroke(255);
-		    //line( i, height, i, height - fft.getBand(i)*8 );
-		 }
+		fft.forward( audioInput.left );
 		
-		//System.out.println(freqCount);
+		 for(int i = 0; i < beat.detectSize(); ++i)
+		  {
+		    // test one frequency band for an onset
+		    if ( beat.isOnset(i) )
+		    {
+		      fill(0,200,0);
+		      rect( width/2, height/2, 20, 20);
+		    }
+		  }
+			
+		
+		
 		
 	}//end draw()
 	
