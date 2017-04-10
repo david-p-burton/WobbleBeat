@@ -3,6 +3,8 @@ package test;
 import java.util.ArrayList;
 import java.util.Random;
 
+import ddf.minim.AudioInput;
+import ddf.minim.AudioPlayer;
 import ddf.minim.AudioSample;
 import ddf.minim.Minim;
 import ddf.minim.analysis.FFT;
@@ -16,12 +18,18 @@ public class Main extends PApplet {
 	
 	//Audio stuff
 	Minim minim;
-	AudioSample audioInput;
+	AudioPlayer song;
 	FFT fft;
-	private BeatListener beatListener;
+
 	private BeatDetect beat;
-	static final int FRAME_SIZE = 2048;
+	static final int FRAME_SIZE = 1024;
 	static final int SAMPLE_RATE = 44100;
+
+	
+	private static int eRadius;
+	private static int hitLocation;
+
+	
 	
 	
 	//ArrayLists
@@ -42,11 +50,20 @@ public class Main extends PApplet {
 		gameObjects = new ArrayList<GameObject>();
 		
 		minim = new Minim(this);
-		audioInput = minim.loadSample("Haunted Shores - Scarlet -instrumental-.mp3", FRAME_SIZE);	
-		fft = new FFT(audioInput.bufferSize(),audioInput.sampleRate());
-		beat = new BeatDetect(audioInput.bufferSize(), audioInput.sampleRate());
-		beatListener = new BeatListener(beat, audioInput, this);
-		 beat.setSensitivity(300);  
+		song = minim.loadFile("Rock drum loop 1 (160 bpm).mp3", FRAME_SIZE);	
+		//song = minim.loadFile("Haunted Shores - Scarlet -instrumental-.mp3", FRAME_SIZE);	
+		
+		fft = new FFT(song.bufferSize(),song.sampleRate());
+		//beat = new BeatDetect();//sound energy mode
+		beat = new BeatDetect(song.bufferSize(), song.sampleRate());//Freq mode
+		
+		//beat.setSensitivity(100);//wait 100ms before another beat detected
+		
+		song.play();
+		eRadius = 20;
+		hitLocation = width/2;
+		
+	
 		
 		
 		
@@ -64,7 +81,7 @@ public class Main extends PApplet {
 		size(WIDTH, HEIGHT);
 	}//end settings()
 	
-	boolean lastPressed = false;
+	
 	
 	
 	public void draw()
@@ -73,30 +90,56 @@ public class Main extends PApplet {
 		background(0);
 		
 		
-		if (keyPressed && key == ' ' && ! lastPressed)
-		{
-			audioInput.trigger();
-			lastPressed = true;
-		}
-		else
-		{
-			//audioInput.stop();
-			lastPressed = false;
-		}
+		//fft.window(FFT.HAMMING);
+		//fft.forward( song.mix );
 		
-		fft.window(FFT.HAMMING);
-		fft.forward( audioInput.left );
+		/*
+		beat.detect(song.mix);
 		
-		 for(int i = 0; i < beat.detectSize(); ++i)
+		  float a = map(eRadius, 20, 80, 60, 255);
+		  fill(60, 255, 0, a);
+		  
+		  if ( beat.isOnset() ) 
 		  {
-		    // test one frequency band for an onset
-		    if ( beat.isOnset(i) )
-		    {
-		      fill(0,200,0);
-		      rect( width/2, height/2, 20, 20);
-		    }
+			  eRadius = 80;
+			  
 		  }
+		  
+		  ellipse(width/2, height/2, eRadius, eRadius);
+		  eRadius *= 0.95;
+		  if ( eRadius < 20 ) eRadius = 20;
+		
+		
+		
+		  if(beat.isKick())
+		  {
+				text("KICK",50,50); 
+		  }
+		   */
+		ellipse(hitLocation, height/2, eRadius,eRadius);
+		beat.detect(song.mix);
+		
+		for(int i = 0;i < beat.detectSize();i++)
+		{
+			if(beat.isKick())
+			{
+				hitLocation = 100;
+			}
 			
+			if(beat.isSnare())
+			{
+				hitLocation = 300;
+			}
+		}
+		
+		
+		
+		  
+		
+	
+		
+		
+		
 		
 		
 		
