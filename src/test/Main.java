@@ -20,7 +20,8 @@ public class Main extends PApplet {
 	Minim minim;
 	AudioPlayer song;
 	FFT fft;
-	BeatDetector beatDetector;
+	BeatDetector kickDetector;
+	BeatDetector snareDetector;
 
 	private BeatDetect beat;
 	static final int FRAME_SIZE = 1024;
@@ -64,8 +65,9 @@ public class Main extends PApplet {
 		beat = new BeatDetect(song.bufferSize(), song.sampleRate());//Freq mode
 		
 		//this requires some tweaking to get it to trigger properly
-		//beat.setSensitivity(275);//wait 30ms before another beat detected
-		beatDetector = new BeatDetector(song,beat,this);
+		
+		kickDetector = new BeatDetector(song,beat,this);
+		snareDetector = new BeatDetector(song, beat, this);
 		
 		//song.play();
 		eRadius = 20;
@@ -121,7 +123,10 @@ public class Main extends PApplet {
 		
 		//fft.window(FFT.HAMMING);
 		//fft.forward( song.mix );
-		beatDetector.detectBeats();
+		//kickDetector.detectKickFREQ();
+		//kickDetector.detectBeat();
+		
+		snareDetector.detectSnareFREQ();
 		
 		processGameObject();
 		//System.out.println("Time: " + currentTime);
