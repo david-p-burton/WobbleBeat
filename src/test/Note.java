@@ -38,6 +38,9 @@ public class Note extends GameObject {
 	public void update() {
 		//make it fall. This will be based off of tempo??
 		pos.y++;
+		
+		
+		
 	}
 	
 	public float getX()
