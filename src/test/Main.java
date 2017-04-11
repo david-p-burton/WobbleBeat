@@ -20,6 +20,7 @@ public class Main extends PApplet {
 	Minim minim;
 	AudioPlayer song;
 	FFT fft;
+	BeatDetector beatDetector;
 
 	private BeatDetect beat;
 	static final int FRAME_SIZE = 1024;
@@ -63,9 +64,10 @@ public class Main extends PApplet {
 		beat = new BeatDetect(song.bufferSize(), song.sampleRate());//Freq mode
 		
 		//this requires some tweaking to get it to trigger properly
-		beat.setSensitivity(275);//wait 30ms before another beat detected
+		//beat.setSensitivity(275);//wait 30ms before another beat detected
+		beatDetector = new BeatDetector(song,beat,this);
 		
-		song.play();
+		//song.play();
 		eRadius = 20;
 		hitLocation = -50;//off sreen
 		gameObjectCount = 0;
@@ -92,7 +94,16 @@ public class Main extends PApplet {
 			noteSpawnTime = 0;
 		}
 		
-	}
+	}//end generateNote()
+	
+	public void processGameObject()
+	{
+		for(int i = 0; i < gameObjects.size();i++)
+		{
+			gameObjects.get(i).update();
+			gameObjects.get(i).render();
+		}
+	}//end processGameObject()
 	
 	public void settings()
 	{
@@ -110,55 +121,12 @@ public class Main extends PApplet {
 		
 		//fft.window(FFT.HAMMING);
 		//fft.forward( song.mix );
-		fill(0,255,0);
-		ellipse(hitLocation, height/2, eRadius,eRadius);
-		beat.detect(song.mix);
-		
-		for(int i = 0;i < beat.detectSize();i++)
-		{
-			if(beat.isKick())
-			{
-				//hitLocation = 100;
-				//eRadius = 100;
-				//generateNote(100);
-			}
-			
-			if(beat.isSnare())
-			{
-				//hitLocation = 300;
-				//eRadius = 100;
-				generateNote(400);
-			}
-		}
-		
-		/*
-		if ( beat.isRange(7,15,3) )//80hz to 100hz roughly
-		  {
-		    fill(232,179,2,200);
-		    rect(width/2, height/2, 100,100);
-		  }
-		  */
+		beatDetector.detectBeats();
 		
 		processGameObject();
-		
-	
-		
-		
-		
 		//System.out.println("Time: " + currentTime);
-		
-		
-		
 	}//end draw()
 	
-	public void processGameObject()
-	{
-		for(int i = 0; i < gameObjects.size();i++)
-		{
-			gameObjects.get(i).update();
-			gameObjects.get(i).render();
-		}
-	}//end processGameObject()
 	
 	public static void main(String[] args)
 	{
