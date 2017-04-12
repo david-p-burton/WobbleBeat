@@ -40,36 +40,24 @@ public class BeatDetector implements AudioListener{
 	}
 	
 	
-	public void detectKick()
+	public boolean detectKick()
 	{
 		//song.play();
 		beat.detect(song.mix);
 		
 	
-		if(beat.isKick())
-		{
-			p.fill(0,200,0);
-		    p.ellipse(kickPos, p.height/2, radius, radius);
-		}
+		return beat.isKick();
+		
 			
 	}//end detectKick()
 	
-	public void detectHat()
+	public boolean detectHat()
 	{
 		//song.play();
 		beat.detect(song.mix);
-		
-	
-		if(beat.isHat())
-		{
-			p.fill(0,0,255);
-		    p.ellipse(hatPos, p.height/3, radius, radius);
-		}
-			
-		
+		return beat.isHat();
 
-	
-	}//end detectKick()
+	}//end detectHat()
 	
 	//uses custom freq range. isKick uses isRange but might not detect for all music styles
 	public void detectKickFREQ()
@@ -85,21 +73,13 @@ public class BeatDetector implements AudioListener{
 	
 	}//end detectKick()
 	
-	public void detectSnare()
+	public boolean detectSnare()
 	{
-		//song.play();
+		
 		beat.detect(song.mix);
-		
-		
-		if(beat.isSnare())
-		{
-			p.fill(255,0,0);
-		    p.ellipse(snrPos, p.height/2, radius, radius);
-		}
 			
-			
-		
-	
+		return beat.isSnare();
+
 	}//end detectSnare()
 	
 	public void detectSnareFREQ()
@@ -117,28 +97,23 @@ public class BeatDetector implements AudioListener{
 	
 	
 	
-	//detect any beat
-	public void detectBeat()
+	//detect any beat(Look up how to return stuff in java)
+	public boolean detectBeat()
 	{
 		//song.play();
 		beat.detect(song.mix);
+		boolean b = false;
 		
 		for(int i = 0; i < beat.detectSize(); ++i)
 		  {
 		    // test one frequency band for an onset
 		    if ( beat.isOnset(i) )
 		    {
-		      p.fill(0,200,0);
-		      p.ellipse(p.width/2, p.height/2, radius, radius);
+		       b = true;
 		    }
-		    radius *= 0.75;
-			
-			if(radius < 20){
-				radius = 100;
-			}
 		  }
-		
-		
+		  
+		return b;
 	}//end detectBeat
 
 

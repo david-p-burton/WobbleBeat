@@ -1,8 +1,7 @@
 package test;
 /*
  * TO DO and NOTES:
- * -cant seem to trigger even remotely close when either using 2 seperate beatDetectors
- * -or using one and calling seperate functions
+ * Need to cap how many notes are generated
  * 
  *
  */
@@ -64,8 +63,8 @@ public class Main extends PApplet {
 		minim = new Minim(this);
 		
 		//two different tracks to test, one with just drums one dense metal mix
-		//song = minim.loadFile("Rock drum loop 1 (160 bpm).mp3", FRAME_SIZE);	
-		song = minim.loadFile("Scarlett.mp3", FRAME_SIZE);	
+		song = minim.loadFile("Rock drum loop 1 (160 bpm).mp3", FRAME_SIZE);	
+		//song = minim.loadFile("Scarlett.mp3", FRAME_SIZE);	
 		
 		song.play();
 		fft = new FFT(song.bufferSize(),song.sampleRate());
@@ -87,7 +86,7 @@ public class Main extends PApplet {
 		eRadius = 20;
 		hitLocation = -50;//off sreen
 		gameObjectCount = 0;
-		maxNotes = 6;//max notes per second
+		maxNotes = 4;//max notes per second
 		
 		
 	}//end setup()
@@ -135,22 +134,13 @@ public class Main extends PApplet {
 		currentTime += timeDelta;
 		background(0);
 		
-		//fft.window(FFT.HAMMING);
-		//fft.forward( song.mix );
 		
-		
-		kickDetector.detectKick();		
-		snareDetector.detectSnare();
-		hatDetector.detectHat();
-		
-		
-		//testing to see if using one beatDetector works than having seperate
-		//for each part
-		
-		//kickDetector.detectKick();
-		//kickDetector.detectSnare();
-		
-		
+		if(kickDetector.detectSnare())
+		{
+			generateNote(width/2);
+		    
+		}
+	
 		processGameObject();
 		//System.out.println("Time: " + currentTime);
 	}//end draw()
