@@ -1,99 +1,116 @@
 package test;
 
+import ddf.minim.AudioListener;
 import ddf.minim.AudioPlayer;
 import ddf.minim.analysis.BeatDetect;
 import processing.core.PApplet;
 
-public class BeatDetector {
+public class BeatDetector implements AudioListener{
 	
 	private AudioPlayer song;
 	private PApplet p;
 	private BeatDetect beat;
+	private int sensitivity;
+	
+	//temporary
 	private float radius;//temporary
+	private float kickPos;
+	private float snrPos;
+	private float hatPos;
 	
 	
-	public BeatDetector(AudioPlayer song,BeatDetect beat, PApplet p)
+	public BeatDetector(AudioPlayer song,BeatDetect beat, PApplet p, int sensitivity)
 	{
 		this.song = song;
 		this.beat = beat;
 		this.p = p;
+		this.sensitivity = sensitivity;
 		
-		//50ms to 75ms seems to work for kick
-		beat.setSensitivity(70);//wait Xms before another beat detected
+		kickPos = 100;
+		snrPos = 300;
+		hatPos = 200;
+		
+		//50ms to 75ms seems to work for kick/snare individually,NOT togehter 0 seems to be a close as it can go
+		beat.setSensitivity(sensitivity);//wait Xms before another beat detected
 		
 		radius = 100;
-		beat.detectMode(0);//freqeuncey mode
+		beat.detectMode(0);//(0) = freqeuncey mode (1) = soundEnergy mode
 		
 		
 	}
 	
+	
 	public void detectKick()
 	{
-		song.play();
+		//song.play();
 		beat.detect(song.mix);
 		
-		for(int i = 0;i < beat.detectSize();i++)
+	
+		if(beat.isKick())
 		{
-			if(beat.isKick())
-			{
-				p.ellipse(p.width/2, p.height/2, radius, radius);
-			}
+			p.fill(0,200,0);
+		    p.ellipse(kickPos, p.height/2, radius, radius);
+		}
 			
-		}
+	}//end detectKick()
+	
+	public void detectHat()
+	{
+		//song.play();
+		beat.detect(song.mix);
 		
-		//radius *= 0.75;
-		
-		if(radius < 20){
-			radius = 100;
+	
+		if(beat.isHat())
+		{
+			p.fill(0,0,255);
+		    p.ellipse(hatPos, p.height/3, radius, radius);
 		}
+			
+		
+
 	
 	}//end detectKick()
 	
 	//uses custom freq range. isKick uses isRange but might not detect for all music styles
 	public void detectKickFREQ()
 	{
-		song.play();
+		//song.play();
 		beat.detect(song.mix);
 		
 		if(beat.isRange(12, 18, 4))//50hz to 85hz roughly
 		{
 			p.fill(0,200,0);
-		    p.ellipse(p.width/2, p.height/2, radius, radius);
+		    p.ellipse(kickPos, p.height/2, radius, radius);
 		}
 	
 	}//end detectKick()
 	
 	public void detectSnare()
 	{
-		song.play();
+		//song.play();
 		beat.detect(song.mix);
 		
-		for(int i = 0;i < beat.detectSize();i++)
+		
+		if(beat.isSnare())
 		{
-			if(beat.isSnare())
-			{
-				p.fill(255,0,0);
-			    p.ellipse(p.width/2, p.height/2, radius, radius);
-			}
-			radius *= 0.95;
-			
-			if(radius < 20){
-				radius = 100;
-			}
-			
+			p.fill(255,0,0);
+		    p.ellipse(snrPos, p.height/2, radius, radius);
 		}
+			
+			
+		
 	
 	}//end detectSnare()
 	
 	public void detectSnareFREQ()
 	{
-		song.play();
+		//song.play();
 		beat.detect(song.mix);
 		
 		if(beat.isRange(4, 10, 4))//100hz to 250hz roughly
 		{
-			p.fill(0,200,0);
-		    p.ellipse(p.width/2, p.height/2, radius, radius);
+			p.fill(255,0,0);
+		    p.ellipse(snrPos, p.height/2, radius, radius);
 		}
 	
 	}//end detectSnareFREQ()
@@ -103,7 +120,7 @@ public class BeatDetector {
 	//detect any beat
 	public void detectBeat()
 	{
-		song.play();
+		//song.play();
 		beat.detect(song.mix);
 		
 		for(int i = 0; i < beat.detectSize(); ++i)
@@ -123,6 +140,20 @@ public class BeatDetector {
 		
 		
 	}//end detectBeat
+
+
+	@Override
+	public void samples(float[] arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void samples(float[] arg0, float[] arg1) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 

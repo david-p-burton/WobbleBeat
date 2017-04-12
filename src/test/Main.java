@@ -1,5 +1,11 @@
 package test;
-
+/*
+ * TO DO and NOTES:
+ * -cant seem to trigger even remotely close when either using 2 seperate beatDetectors
+ * -or using one and calling seperate functions
+ * 
+ *
+ */
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -22,6 +28,7 @@ public class Main extends PApplet {
 	FFT fft;
 	BeatDetector kickDetector;
 	BeatDetector snareDetector;
+	BeatDetector hatDetector;
 
 	private BeatDetect beat;
 	static final int FRAME_SIZE = 1024;
@@ -57,17 +64,24 @@ public class Main extends PApplet {
 		minim = new Minim(this);
 		
 		//two different tracks to test, one with just drums one dense metal mix
-		song = minim.loadFile("Rock drum loop 1 (160 bpm).mp3", FRAME_SIZE);	
-		//song = minim.loadFile("Haunted Shores - Scarlet -instrumental-.mp3", FRAME_SIZE);	
+		//song = minim.loadFile("Rock drum loop 1 (160 bpm).mp3", FRAME_SIZE);	
+		song = minim.loadFile("Scarlett.mp3", FRAME_SIZE);	
 		
+		song.play();
 		fft = new FFT(song.bufferSize(),song.sampleRate());
-		//beat = new BeatDetect();//sound energy mode
-		beat = new BeatDetect(song.bufferSize(), song.sampleRate());//Freq mode
+		beat = new BeatDetect();//sound energy mode
+		//beat = new BeatDetect(song.bufferSize(), song.sampleRate());//Freq mode
 		
 		//this requires some tweaking to get it to trigger properly
+		//the last parameter is the sensitivity. 
+		//It seems to work best, if using multiple beatDetectors to have it set to zero
+		//if using one to check for each beat.it can be adjusted. This seems to depend on song tempo.
+		kickDetector = new BeatDetector(song,beat,this,0);
+		snareDetector = new BeatDetector(song, beat, this,0);
+		hatDetector = new BeatDetector(song, beat, this,0);
 		
-		kickDetector = new BeatDetector(song,beat,this);
-		snareDetector = new BeatDetector(song, beat, this);
+		
+		//BeatDetector.playSong();
 		
 		//song.play();
 		eRadius = 20;
@@ -123,10 +137,19 @@ public class Main extends PApplet {
 		
 		//fft.window(FFT.HAMMING);
 		//fft.forward( song.mix );
-		//kickDetector.detectKickFREQ();
-		//kickDetector.detectBeat();
 		
-		snareDetector.detectSnareFREQ();
+		
+		kickDetector.detectKick();		
+		snareDetector.detectSnare();
+		hatDetector.detectHat();
+		
+		
+		//testing to see if using one beatDetector works than having seperate
+		//for each part
+		
+		//kickDetector.detectKick();
+		//kickDetector.detectSnare();
+		
 		
 		processGameObject();
 		//System.out.println("Time: " + currentTime);
