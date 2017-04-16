@@ -8,6 +8,7 @@ public class Player extends GameObject{
 	private String name;
 	private int health;
 	private boolean isDead;
+	private int score;
 	private PApplet p;
 	
 	public Player(String name, int health, PApplet p)
@@ -15,6 +16,7 @@ public class Player extends GameObject{
 		this.name = name;
 		this.health = health;
 		this.p = p;
+		score = 0;
 	}
 	
 	public void update()
@@ -41,6 +43,15 @@ public class Player extends GameObject{
 		return health;
 	}
 
+	public void incrementScore()
+	{
+		score++;
+	}
+	
+	public int getScore()
+	{
+		return score;
+	}
 	@Override
 	public void render() {
 		// TODO Auto-generated method stub

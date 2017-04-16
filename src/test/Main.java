@@ -139,7 +139,14 @@ public class Main extends PApplet {
 			if(o instanceof Note)
 			{
 				Note n = (Note)o;
-				n.isClicked();
+				//check if note is clicked
+				
+				if(n.isClicked())
+				{
+					//text("Test", WIDTH/2,HEIGHT/2);
+					gameObjects.remove(n);
+					p.incrementScore();
+				}
 				
 				if(n.getY() > HEIGHT)
 				{
@@ -183,6 +190,8 @@ public class Main extends PApplet {
 		
 		
 		text("Time " + currentTime,10,10);
+		text("Score " + player.getScore(),10,20);
+		text("Lives " + player.getHealth(),10,30);
 		//System.out.println("ArrayList size: " + gameObjects.size());
 	}//end draw()
 	

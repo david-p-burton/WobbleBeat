@@ -46,22 +46,23 @@ public class Note extends GameObject {
 		
 	}
 	
-	public void isClicked()
+	public boolean isClicked()
 	{
 		//(mouseX > x) && (mouseX < x  + b_width) && (mouseY > y) && (mouseY < y + b_height) )
-		if((p.mouseX >= pos.x - mousePadding) && (p.mouseX <= pos.x + mousePadding) )
+		if( ((p.mouseX >= pos.x - mousePadding) && (p.mouseX <= pos.x + mousePadding))&& 
+				((p.mouseY >= pos.y - mousePadding) && (p.mouseY <= pos.y + mousePadding))   )
 		{
-			overNote = true;
-			
 			if(p.mousePressed)
 			{	
-				p.text("TEST",p.width/2,p.height/2);
+				overNote = true;
 			}
 		}
 		else
 		{
 			overNote = false;
 		}
+		
+		return overNote;
 	}
 	
 	public float getX()
