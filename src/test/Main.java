@@ -47,7 +47,8 @@ public class Main extends PApplet {
 	
 	//Misc control stuff. Is this a good place to put these variables??
 	private static Random rand = new Random();
-	private static int randStartPos; 
+	private static int randPosX;
+	private static int randPosY;
 	private static float timeDelta = 1.0f / 60.0f;
 	private static float currentTime;
 	private static float noteSpawnTime;
@@ -96,10 +97,12 @@ public class Main extends PApplet {
 		//Find a better way to limit how many notes are created: Need one note per hit
 		
 		//System.out.println("num of objects: " + gameObjectCount);
+		randPosX = rand.nextInt(WIDTH);
+		randPosY = rand.nextInt(HEIGHT);
 		
 		if(gameObjectCount < maxNotes)
 		{
-			Note n = new Note(startPos,0, 20, this);
+			Note n = new Note(randPosX,randPosY, 20, this);
 			gameObjects.add(n);
 			gameObjectCount++;
 		}
@@ -124,6 +127,7 @@ public class Main extends PApplet {
 		if(p.checkIsDead())
 		{
 			song.close();
+			text("GAME OVER", WIDTH/2,HEIGHT/2);
 			running = false;
 		}
 		
@@ -135,7 +139,7 @@ public class Main extends PApplet {
 			//get game object and check if it is a note
 			GameObject o = gameObjects.get(i);
 			
-			//check for note off screen
+			//check for note off screen and if clicked, if so remove it
 			if(o instanceof Note)
 			{
 				Note n = (Note)o;
