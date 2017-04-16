@@ -28,19 +28,16 @@ public class Main extends PApplet {
 	BeatDetector kickDetector;
 	BeatDetector snareDetector;
 	BeatDetector hatDetector;
+	BeatDetector beatDetector;
 
 	private BeatDetect beat;
 	static final int FRAME_SIZE = 1024;
 	static final int SAMPLE_RATE = 44100;
 
-	
 	private static int eRadius;
 	private static int hitLocation;
 	private static int gameObjectCount;
 
-	
-	
-	
 	//ArrayLists
 	ArrayList<GameObject> gameObjects;
 	
@@ -78,26 +75,24 @@ public class Main extends PApplet {
 		kickDetector = new BeatDetector(song,beat,this,0);
 		snareDetector = new BeatDetector(song, beat, this,0);
 		hatDetector = new BeatDetector(song, beat, this,0);
+		beatDetector = new BeatDetector(song,beat, this,0);
 		
 		
-		//BeatDetector.playSong();
-		
-		//song.play();
 		eRadius = 20;
 		hitLocation = -50;//off sreen
 		gameObjectCount = 0;
-		maxNotes = 4;//max notes per second
+		maxNotes = 1;//max notes per second
 		
 		
 	}//end setup()
 	
 	public void generateNote(int startPos)
 	{
-		//randStartPos = rand.nextInt(WIDTH) + 1;
-		noteSpawnTime += timeDelta;
+		//Find a better way to limit how many notes are created: Need one note per hit
+		
 		//System.out.println("num of objects: " + gameObjectCount);
 		
-		if(gameObjectCount < maxNotes && noteSpawnTime < 1.00)
+		if(gameObjectCount < maxNotes)
 		{
 			Note n = new Note(startPos,0, 20, this);
 			gameObjects.add(n);
@@ -106,7 +101,6 @@ public class Main extends PApplet {
 		else
 		{
 			gameObjectCount = 0;
-			noteSpawnTime = 0;
 		}
 		
 	}//end generateNote()
@@ -135,10 +129,27 @@ public class Main extends PApplet {
 		background(0);
 		
 		
-		if(kickDetector.detectSnare())
+		if(kickDetector.detectKick())
+		{
+			//generateNote(width/3);
+		    
+		}
+		
+		if(snareDetector.detectSnare())
+		{
+			//generateNote(width/2);
+		    
+		}
+		
+		if(hatDetector.detectHat())
+		{
+			//generateNote(width/2);
+		    
+		}
+		
+		if(beatDetector.detectBeat())
 		{
 			generateNote(width/2);
-		    
 		}
 	
 		processGameObject();

@@ -113,7 +113,11 @@ public class BeatDetector implements AudioListener{
 		    }
 		  }
 		  
+		
 		return b;
+			
+		  
+		//return b;
 	}//end detectBeat
 
 
