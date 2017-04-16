@@ -62,8 +62,8 @@ public class Main extends PApplet {
 		minim = new Minim(this);
 		
 		//two different tracks to test, one with just drums one dense metal mix
-		//song = minim.loadFile("Rock drum loop 1 (160 bpm).mp3", FRAME_SIZE);	
-		song = minim.loadFile("Scarlett.mp3", FRAME_SIZE);	
+		song = minim.loadFile("Rock drum loop 1 (160 bpm).mp3", FRAME_SIZE);	
+		//song = minim.loadFile("Scarlett.mp3", FRAME_SIZE);	
 		
 		song.play();
 		fft = new FFT(song.bufferSize(),song.sampleRate());
@@ -80,7 +80,7 @@ public class Main extends PApplet {
 		beatDetector = new BeatDetector(song,beat, this,300);
 		
 		//init player
-		player = new Player("Ro",100,this);
+		player = new Player("Ro",10,this);
 		gameObjects.add(player);
 		
 		
@@ -115,13 +115,29 @@ public class Main extends PApplet {
 	
 	public void processGameObject()
 	{
+		//Player is always 1st object in ArrayList
+		GameObject obj = gameObjects.get(0);
+		
+		Player p = (Player)obj;
+		//p.sayHello();
+		System.out.println(p.getHealth());
+		
+		
+		
+		if(p.checkIsDead())
+		{
+			song.close();
+			running = false;
+		}
+		
 		for(int i = 0; i < gameObjects.size();i++)
 		{
 			gameObjects.get(i).update();
 			gameObjects.get(i).render();
 			
-			
-			
+			GameObject o = gameObjects.get(i);
+			/*
+			//Player is 1st object?? Access 1st element of list make it more efficient rather than iterating?
 			GameObject obj = gameObjects.get(i);
 			//check for player death
 			if(obj instanceof Player)
@@ -133,20 +149,23 @@ public class Main extends PApplet {
 					running = false;
 				}
 			}
-			
+			*/
 			//check for note off screen
-			if(obj instanceof Note)
+			if(o instanceof Note)
 			{
-				Note n = (Note)obj;
+				Note n = (Note)o;
 				
 				if(n.getY() > HEIGHT)
 				{
-					//gameObjects.remove(n);//not sure will this work??
+					p.decrementHealth();
+					gameObjects.remove(n);//not sure will this work??
 					//decrement players lives somehow without having to make it global
+					
 				}
 			}
 			
 		}
+	
 	}//end processGameObject()
 	
 	
@@ -165,9 +184,9 @@ public class Main extends PApplet {
 		
 		background(0);
 		
+		//game loop
 		if(running)
 		{
-			
 			currentTime += timeDelta;
 			
 			if(beatDetector.detectBeat())
@@ -177,10 +196,12 @@ public class Main extends PApplet {
 			
 			processGameObject();
 			
-		}
+		}//end gameLoop
+	
 		
 		
 		//System.out.println("Time: " + currentTime);
+		//System.out.println("ArrayList size: " + gameObjects.size());
 	}//end draw()
 	
 	

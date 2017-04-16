@@ -25,9 +25,20 @@ public class Player extends GameObject{
 		}
 	}
 	
+	//testing
+	public void sayHello()
+	{
+		System.out.println("HellO");
+	}
+	
 	public void decrementHealth()
 	{
 		health--;
+	}
+	
+	public int getHealth()
+	{
+		return health;
 	}
 
 	@Override
