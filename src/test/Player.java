@@ -24,6 +24,11 @@ public class Player extends GameObject{
 			isDead = true;
 		}
 	}
+	
+	public void decrementHealth()
+	{
+		health--;
+	}
 
 	@Override
 	public void render() {

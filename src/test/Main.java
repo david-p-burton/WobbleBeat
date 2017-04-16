@@ -20,6 +20,7 @@ public class Main extends PApplet {
 
 	public static final int WIDTH = 512;
 	public static final int HEIGHT = 675;
+	public static boolean running;
 	
 	//Audio stuff
 	Minim minim;
@@ -43,6 +44,7 @@ public class Main extends PApplet {
 	
 	//Objects
 	Note n;
+	Player player;
 	
 	//Misc control stuff. Is this a good place to put these variables??
 	private static Random rand = new Random();
@@ -60,8 +62,8 @@ public class Main extends PApplet {
 		minim = new Minim(this);
 		
 		//two different tracks to test, one with just drums one dense metal mix
-		song = minim.loadFile("Rock drum loop 1 (160 bpm).mp3", FRAME_SIZE);	
-		//song = minim.loadFile("Scarlett.mp3", FRAME_SIZE);	
+		//song = minim.loadFile("Rock drum loop 1 (160 bpm).mp3", FRAME_SIZE);	
+		song = minim.loadFile("Scarlett.mp3", FRAME_SIZE);	
 		
 		song.play();
 		fft = new FFT(song.bufferSize(),song.sampleRate());
@@ -75,13 +77,19 @@ public class Main extends PApplet {
 		kickDetector = new BeatDetector(song,beat,this,0);
 		snareDetector = new BeatDetector(song, beat, this,0);
 		hatDetector = new BeatDetector(song, beat, this,0);
-		beatDetector = new BeatDetector(song,beat, this,0);
+		beatDetector = new BeatDetector(song,beat, this,300);
+		
+		//init player
+		player = new Player("Ro",100,this);
+		gameObjects.add(player);
 		
 		
 		eRadius = 20;
 		hitLocation = -50;//off sreen
 		gameObjectCount = 0;
 		maxNotes = 1;//max notes per second
+		
+		running = true;
 		
 		
 	}//end setup()
@@ -111,8 +119,37 @@ public class Main extends PApplet {
 		{
 			gameObjects.get(i).update();
 			gameObjects.get(i).render();
+			
+			
+			
+			GameObject obj = gameObjects.get(i);
+			//check for player death
+			if(obj instanceof Player)
+			{
+				Player p = (Player)obj;
+				
+				if(p.checkIsDead())
+				{
+					running = false;
+				}
+			}
+			
+			//check for note off screen
+			if(obj instanceof Note)
+			{
+				Note n = (Note)obj;
+				
+				if(n.getY() > HEIGHT)
+				{
+					//gameObjects.remove(n);//not sure will this work??
+					//decrement players lives somehow without having to make it global
+				}
+			}
+			
 		}
 	}//end processGameObject()
+	
+	
 	
 	public void settings()
 	{
@@ -125,34 +162,24 @@ public class Main extends PApplet {
 	
 	public void draw()
 	{
-		currentTime += timeDelta;
+		
 		background(0);
 		
-		
-		if(kickDetector.detectKick())
+		if(running)
 		{
-			//generateNote(width/3);
-		    
+			
+			currentTime += timeDelta;
+			
+			if(beatDetector.detectBeat())
+			{
+				generateNote(WIDTH/2);
+			}
+			
+			processGameObject();
+			
 		}
 		
-		if(snareDetector.detectSnare())
-		{
-			//generateNote(width/2);
-		    
-		}
 		
-		if(hatDetector.detectHat())
-		{
-			//generateNote(width/2);
-		    
-		}
-		
-		if(beatDetector.detectBeat())
-		{
-			generateNote(width/2);
-		}
-	
-		processGameObject();
 		//System.out.println("Time: " + currentTime);
 	}//end draw()
 	
