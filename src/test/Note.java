@@ -10,6 +10,8 @@ public class Note extends GameObject {
 	PImage sprites[];
 	private int animationKey;
 	private PApplet p;
+	private int mousePadding;//used for offset for click
+	private boolean overNote;
 	
 	
 	public Note(float x, float y, float size, PApplet p)
@@ -19,6 +21,7 @@ public class Note extends GameObject {
 		this.p = p;
 		pos = new PVector(x,y);
 		this.size = size;
+		mousePadding = 20;
 		
 		//this is index for which image to be displayed. Make this bigger if you want more "animation" images
 		animationKey = 1;
@@ -41,6 +44,24 @@ public class Note extends GameObject {
 		
 		
 		
+	}
+	
+	public void isClicked()
+	{
+		//(mouseX > x) && (mouseX < x  + b_width) && (mouseY > y) && (mouseY < y + b_height) )
+		if((p.mouseX >= pos.x - mousePadding) && (p.mouseX <= pos.x + mousePadding) )
+		{
+			overNote = true;
+			
+			if(p.mousePressed)
+			{	
+				p.text("TEST",p.width/2,p.height/2);
+			}
+		}
+		else
+		{
+			overNote = false;
+		}
 	}
 	
 	public float getX()

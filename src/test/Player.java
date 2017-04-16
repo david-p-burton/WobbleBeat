@@ -28,7 +28,7 @@ public class Player extends GameObject{
 	//testing
 	public void sayHello()
 	{
-		System.out.println("HellO");
+		System.out.println("Hello, my name is " + name);
 	}
 	
 	public void decrementHealth()

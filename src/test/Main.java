@@ -35,8 +35,7 @@ public class Main extends PApplet {
 	static final int FRAME_SIZE = 1024;
 	static final int SAMPLE_RATE = 44100;
 
-	private static int eRadius;
-	private static int hitLocation;
+	
 	private static int gameObjectCount;
 
 	//ArrayLists
@@ -67,14 +66,14 @@ public class Main extends PApplet {
 		
 		song.play();
 		fft = new FFT(song.bufferSize(),song.sampleRate());
-		beat = new BeatDetect();//sound energy mode
-		//beat = new BeatDetect(song.bufferSize(), song.sampleRate());//Freq mode
+		//beat = new BeatDetect();//sound energy mode
+		beat = new BeatDetect(song.bufferSize(), song.sampleRate());//Freq mode
 		
 		//this requires some tweaking to get it to trigger properly
 		//the last parameter is the sensitivity. 
 		//It seems to work best, if using multiple beatDetectors to have it set to zero
 		//if using one to check for each beat.it can be adjusted. This seems to depend on song tempo.
-		kickDetector = new BeatDetector(song,beat,this,0);
+		kickDetector = new BeatDetector(song,beat,this,10);
 		snareDetector = new BeatDetector(song, beat, this,0);
 		hatDetector = new BeatDetector(song, beat, this,0);
 		beatDetector = new BeatDetector(song,beat, this,300);
@@ -84,8 +83,6 @@ public class Main extends PApplet {
 		gameObjects.add(player);
 		
 		
-		eRadius = 20;
-		hitLocation = -50;//off sreen
 		gameObjectCount = 0;
 		maxNotes = 1;//max notes per second
 		
@@ -115,13 +112,13 @@ public class Main extends PApplet {
 	
 	public void processGameObject()
 	{
+		
 		//Player is always 1st object in ArrayList
 		GameObject obj = gameObjects.get(0);
 		
 		Player p = (Player)obj;
 		//p.sayHello();
 		System.out.println(p.getHealth());
-		
 		
 		
 		if(p.checkIsDead())
@@ -135,35 +132,21 @@ public class Main extends PApplet {
 			gameObjects.get(i).update();
 			gameObjects.get(i).render();
 			
+			//get game object and check if it is a note
 			GameObject o = gameObjects.get(i);
-			/*
-			//Player is 1st object?? Access 1st element of list make it more efficient rather than iterating?
-			GameObject obj = gameObjects.get(i);
-			//check for player death
-			if(obj instanceof Player)
-			{
-				Player p = (Player)obj;
-				
-				if(p.checkIsDead())
-				{
-					running = false;
-				}
-			}
-			*/
+			
 			//check for note off screen
 			if(o instanceof Note)
 			{
 				Note n = (Note)o;
+				n.isClicked();
 				
 				if(n.getY() > HEIGHT)
 				{
 					p.decrementHealth();
-					gameObjects.remove(n);//not sure will this work??
-					//decrement players lives somehow without having to make it global
-					
+					gameObjects.remove(n);
 				}
 			}
-			
 		}
 	
 	}//end processGameObject()
@@ -177,33 +160,37 @@ public class Main extends PApplet {
 	}//end settings()
 	
 	
-	
-	
 	public void draw()
 	{
 		
 		background(0);
+		
 		
 		//game loop
 		if(running)
 		{
 			currentTime += timeDelta;
 			
-			if(beatDetector.detectBeat())
+			if(kickDetector.detectKick())
 			{
 				generateNote(WIDTH/2);
 			}
 			
+			
 			processGameObject();
 			
 		}//end gameLoop
-	
 		
 		
-		//System.out.println("Time: " + currentTime);
+		text("Time " + currentTime,10,10);
 		//System.out.println("ArrayList size: " + gameObjects.size());
 	}//end draw()
 	
+
+	public void mouseClicked()
+	{
+		
+	}
 	
 	public static void main(String[] args)
 	{
