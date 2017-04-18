@@ -236,13 +236,9 @@ public class Main extends PApplet {
 					{
 						generateNote(WIDTH / 2);
 					}
-					
-					
 					processGameObject();
-					
 					//moved to a separate method to avoid clutter
 					stats();
-					
 				}//end gameLoop
 				break;
 			}
