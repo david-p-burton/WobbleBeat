@@ -2,8 +2,8 @@ package test;
 /*
  * TO DO and NOTES:
  * Need to cap how many notes are generated
- * 
- *
+ * method to determine tempo (David) 
+ * menu methods/class (David)
  */
 import java.util.ArrayList;
 import java.util.Random;
@@ -15,6 +15,7 @@ import ddf.minim.Minim;
 import ddf.minim.analysis.FFT;
 import ddf.minim.analysis.BeatDetect;
 import processing.core.PApplet;
+import processing.core.PFont;
 
 public class Main extends PApplet {
 
@@ -37,6 +38,9 @@ public class Main extends PApplet {
 
 	
 	private static int gameObjectCount;
+	
+	//font
+	PFont gameText;
 
 	//ArrayLists
 	ArrayList<GameObject> gameObjects;
@@ -53,6 +57,7 @@ public class Main extends PApplet {
 	private static float currentTime;
 	private static float noteSpawnTime;
 	private static int maxNotes;
+	private static float tempoRate;
 
 	
 	public void setup()
@@ -64,6 +69,9 @@ public class Main extends PApplet {
 		//two different tracks to test, one with just drums one dense metal mix
 		song = minim.loadFile("Rock drum loop 1 (160 bpm).mp3", FRAME_SIZE);	
 		//song = minim.loadFile("Scarlett.mp3", FRAME_SIZE);	
+		
+		//game font
+		gameText = createFont("data/game.ttf", 30, true);
 		
 		song.play();
 		fft = new FFT(song.bufferSize(),song.sampleRate());
@@ -98,11 +106,13 @@ public class Main extends PApplet {
 		
 		//System.out.println("num of objects: " + gameObjectCount);
 		randPosX = rand.nextInt(WIDTH);
-		randPosY = rand.nextInt(HEIGHT);
+		//D - make game "fairer" by making notes spawn at fixed locations
+		//D - placeholder number = 200
+		randPosY = 200;
 		
 		if(gameObjectCount < maxNotes)
 		{
-			Note n = new Note(randPosX,randPosY, 20, this);
+			Note n = new Note(randPosX,randPosY, 20, 1, this);
 			gameObjects.add(n);
 			gameObjectCount++;
 		}
@@ -184,7 +194,7 @@ public class Main extends PApplet {
 			
 			if(kickDetector.detectKick())
 			{
-				generateNote(WIDTH/2);
+				generateNote(WIDTH / 2);
 			}
 			
 			
@@ -192,13 +202,18 @@ public class Main extends PApplet {
 			
 		}//end gameLoop
 		
-		
+		//moved to a separate method to avoid clutter
+		stats();
+	}//end draw()
+	
+	public void stats()
+	{
+		textFont(gameText, 10);
 		text("Time " + currentTime,10,10);
 		text("Score " + player.getScore(),10,20);
 		text("Lives " + player.getHealth(),10,30);
 		//System.out.println("ArrayList size: " + gameObjects.size());
-	}//end draw()
-	
+	}
 
 	public void mouseClicked()
 	{
