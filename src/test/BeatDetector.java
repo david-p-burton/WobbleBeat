@@ -1,16 +1,28 @@
 package test;
 
 import ddf.minim.AudioListener;
+import ddf.minim.AudioOutput;
 import ddf.minim.AudioPlayer;
+import ddf.minim.Minim;
+import ddf.minim.UGen;
 import ddf.minim.analysis.BeatDetect;
 import processing.core.PApplet;
+import ddf.minim.effects.*;
+import ddf.minim.ugens.*;
 
 public class BeatDetector implements AudioListener{
 	
 	private AudioPlayer song;
+	
+	
+	
 	private PApplet p;
 	private BeatDetect beat;
 	private int sensitivity;
+	
+	//filters
+	private LowPassFS  lpf;
+	private HighPassSP hpf;
 	
 	//temporary
 	private float radius;//temporary
@@ -19,11 +31,14 @@ public class BeatDetector implements AudioListener{
 	private float hatPos;
 	
 	
+	@SuppressWarnings("deprecation")
 	public BeatDetector(AudioPlayer song,BeatDetect beat, PApplet p, int sensitivity)
 	{
 		this.song = song;
+		//this.songWithFilter =  song;
 		this.beat = beat;
 		this.p = p;
+	
 		this.sensitivity = sensitivity;
 		
 		kickPos = 100;
@@ -36,6 +51,12 @@ public class BeatDetector implements AudioListener{
 		radius = 100;
 		beat.detectMode(0);//(0) = freqeuncey mode (1) = soundEnergy mode
 		
+		
+		lpf = new LowPassFS(1000, song.sampleRate());
+		hpf = new HighPassSP(500, song.sampleRate());
+		
+		song.addEffect(lpf);
+		song.addEffect(hpf);
 		
 	}
 	

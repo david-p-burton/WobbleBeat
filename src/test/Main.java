@@ -14,10 +14,13 @@ import ddf.minim.AudioPlayer;
 import ddf.minim.AudioSample;
 import ddf.minim.Minim;
 import ddf.minim.analysis.FFT;
+import ddf.minim.effects.LowPassFS;
 import ddf.minim.analysis.BeatDetect;
 import processing.core.PApplet;
 import processing.core.PFont;
 import processing.core.PImage;
+import ddf.minim.effects.*;
+import ddf.minim.ugens.*;
 
 public class Main extends PApplet {
 
@@ -44,6 +47,7 @@ public class Main extends PApplet {
 	BeatDetector beatDetector;
 
 	private BeatDetect beat;
+	
 	static final int FRAME_SIZE = 1024;
 	static final int SAMPLE_RATE = 44100;
 
@@ -79,6 +83,7 @@ public class Main extends PApplet {
 	private static int selecter;
 
 	
+	@SuppressWarnings("deprecation")
 	public void setup()
 	{
 		gameObjects = new ArrayList<GameObject>();
@@ -86,7 +91,8 @@ public class Main extends PApplet {
 		minim = new Minim(this);
 		
 		//two different tracks to test, one with just drums one dense metal mix
-		song = minim.loadFile("Rock drum loop 1 (160 bpm).mp3", FRAME_SIZE);	
+		song = minim.loadFile("Rock drum loop 1 (160 bpm).mp3", FRAME_SIZE);
+		
 		//song = minim.loadFile("Scarlett.mp3", FRAME_SIZE);	
 		
 		//game font
@@ -105,9 +111,9 @@ public class Main extends PApplet {
 		//It seems to work best, if using multiple beatDetectors to have it set to zero
 		//if using one to check for each beat.it can be adjusted. This seems to depend on song tempo.
 		kickDetector = new BeatDetector(song,beat,this,10);
-		snareDetector = new BeatDetector(song, beat, this,0);
-		hatDetector = new BeatDetector(song, beat, this,0);
-		beatDetector = new BeatDetector(song,beat, this,300);
+		//snareDetector = new BeatDetector(song, beat, this,0);
+		//hatDetector = new BeatDetector(song, beat, this,0);
+		//beatDetector = new BeatDetector(song,beat, this,300);
 		
 		//init player
 		player = new Player("Ro",10,this);
