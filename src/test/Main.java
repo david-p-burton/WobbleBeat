@@ -220,7 +220,7 @@ public class Main extends PApplet {
 				textAlign(CENTER, CENTER);
 				textFont(gameText, 20);
 			    text("START", (width / 2), (float)(height * 0.8));
-			    text("EXIT", (width / 2), (float)(height * 0.81));
+			    text("EXIT", (width / 2), (float)(height * 0.85));
 			    selecter();
 				break;
 			}
@@ -262,24 +262,20 @@ public class Main extends PApplet {
 		if(checkKey('w'))
 		{
 			selecter = 1;
-			imageMode(CENTER);
-		    image(test, width/2 + 20, height/2 + 20);
 			
 		}
 		else if(checkKey('s'))
 		{
 			selecter = 0;
-			imageMode(CENTER);
-		    image(test, width/2, height/2);
 		}
 		
 		if(selecter == 1)
 		{
-		  image(test, width/2, height/2);
+		  image(test, width/3, (float)(height * 0.77) + 5, 30, 30);
 		}
 		if(selecter == 0)
 		{
-			image(test, width/2 + 20, height/2 + 20);
+			image(test, width/3, (float)(height * 0.82) + 5, 30, 30);
 		}
 		   
 		
