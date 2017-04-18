@@ -4,6 +4,7 @@ package test;
  * Need to cap how many notes are generated
  * method to determine tempo (David) 
  * menu methods/class (David)
+ *  (David)
  */
 import java.util.ArrayList;
 import java.util.Random;
@@ -16,12 +17,22 @@ import ddf.minim.analysis.FFT;
 import ddf.minim.analysis.BeatDetect;
 import processing.core.PApplet;
 import processing.core.PFont;
+import processing.core.PImage;
 
 public class Main extends PApplet {
 
 	public static final int WIDTH = 512;
 	public static final int HEIGHT = 675;
 	public static boolean running;
+	//variable to determine what should be drawn on screen
+	public int gameState; 
+	/*Available game states
+	 * 1 = main menu
+	 * 2 = Game mode
+	 * 3 = Game over screen
+	 * 4 = 
+	 * 
+	 */
 	
 	//Audio stuff
 	Minim minim;
@@ -41,13 +52,19 @@ public class Main extends PApplet {
 	
 	//font
 	PFont gameText;
-
+	
+	//Arrays
+	boolean[] keyStrokes = new boolean[500];
+	
 	//ArrayLists
 	ArrayList<GameObject> gameObjects;
 	
 	//Objects
 	Note n;
 	Player player;
+	
+	//Images
+	PImage test;
 	
 	//Misc control stuff. Is this a good place to put these variables??
 	private static Random rand = new Random();
@@ -57,7 +74,9 @@ public class Main extends PApplet {
 	private static float currentTime;
 	private static float noteSpawnTime;
 	private static int maxNotes;
+	//David
 	private static float tempoRate;
+	private static int selecter;
 
 	
 	public void setup()
@@ -73,7 +92,10 @@ public class Main extends PApplet {
 		//game font
 		gameText = createFont("data/game.ttf", 30, true);
 		
-		song.play();
+		//Images
+		test = loadImage("data/musicNote.png");
+		
+		//song.play();  - moved to gameState 2 for testing
 		fft = new FFT(song.bufferSize(),song.sampleRate());
 		//beat = new BeatDetect();//sound energy mode
 		beat = new BeatDetect(song.bufferSize(), song.sampleRate());//Freq mode
@@ -96,6 +118,7 @@ public class Main extends PApplet {
 		maxNotes = 1;//max notes per second
 		
 		running = true;
+		gameState = 1;
 		
 		
 	}//end setup()
@@ -106,7 +129,7 @@ public class Main extends PApplet {
 		
 		//System.out.println("num of objects: " + gameObjectCount);
 		randPosX = rand.nextInt(WIDTH);
-		//D - make game "fairer" by making notes spawn at fixed locations
+		//D - make game "fairer" by making notes spawn at fixed locations?
 		//D - placeholder number = 200
 		randPosY = 200;
 		
@@ -186,25 +209,90 @@ public class Main extends PApplet {
 		
 		background(0);
 		
-		
-		//game loop
-		if(running)
+		switch(gameState)
 		{
-			currentTime += timeDelta;
-			
-			if(kickDetector.detectKick())
+			case 0: //spare
 			{
-				generateNote(WIDTH / 2);
+				break;
 			}
-			
-			
-			processGameObject();
-			
-		}//end gameLoop
-		
-		//moved to a separate method to avoid clutter
-		stats();
+			case 1: //game menu
+			{
+				textAlign(CENTER, CENTER);
+				textFont(gameText, 20);
+			    text("START", (width / 2), (float)(height * 0.8));
+			    text("EXIT", (width / 2), (float)(height * 0.81));
+			    selecter();
+				break;
+			}
+			case 2: //game Mode
+			{
+				song.play();
+				//game loop
+				if(running)
+				{
+					currentTime += timeDelta;
+					
+					if(kickDetector.detectKick())
+					{
+						generateNote(WIDTH / 2);
+					}
+					
+					
+					processGameObject();
+					
+					//moved to a separate method to avoid clutter
+					stats();
+					
+				}//end gameLoop
+				break;
+			}
+			case 3: //game Over
+			{
+				break;
+			}
+			default: //switch should never get to this state - left blank
+			{
+				break;
+			}
+		}
 	}//end draw()
+	
+	public void selecter()
+	{
+		if(checkKey('w'))
+		{
+			selecter = 1;
+			imageMode(CENTER);
+		    image(test, width/2 + 20, height/2 + 20);
+			
+		}
+		else if(checkKey('s'))
+		{
+			selecter = 0;
+			imageMode(CENTER);
+		    image(test, width/2, height/2);
+		}
+		
+		if(selecter == 1)
+		{
+		  image(test, width/2, height/2);
+		}
+		if(selecter == 0)
+		{
+			image(test, width/2 + 20, height/2 + 20);
+		}
+		   
+		
+		
+		if(selecter == 1 && checkKey(' '))
+		{
+		    gameState = 2;
+		}
+		else if(selecter == 0 && checkKey(' '))
+		{
+			exit();
+		}
+	}
 	
 	public void stats()
 	{
@@ -225,7 +313,24 @@ public class Main extends PApplet {
 		//boiler plate code
 		String[] a = {"MAIN"};
         PApplet.runSketch( a, new Main());
-        
-        
+	}
+	
+	public void keyPressed()
+	{
+	  keyStrokes[keyCode] = true;
+	}
+
+	public void keyReleased()
+	{
+	  keyStrokes[keyCode] = false;
+	}
+
+	public boolean checkKey(int a)
+	{
+	  if(keyStrokes.length >= a)
+	  {
+	    return keyStrokes[a] || keyStrokes[Character.toUpperCase(a)];
+	  }
+	  return false;
 	}
 }
