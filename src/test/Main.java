@@ -5,6 +5,9 @@ package test;
  * method to determine tempo (David) 
  * menu methods/class (David)
  *  (David)
+ *  
+ *  1)Too many notes are being generated.Making game impossible
+ *  	--Need to imrpove how well they are trigger/detected. Maybe using the Low and high pass filters?
  */
 import java.util.ArrayList;
 import java.util.Random;
@@ -66,6 +69,7 @@ public class Main extends PApplet {
 	//Objects
 	Note n;
 	Player player;
+	Score score;
 	
 	//Images
 	PImage test;
@@ -166,6 +170,9 @@ public class Main extends PApplet {
 		if(p.checkIsDead())
 		{
 			song.close();
+			
+			score = new Score("Ronan",p.getScore(),currentTime);
+			
 			text("GAME OVER", WIDTH/2,HEIGHT/2);
 			running = false;
 		}
@@ -232,20 +239,9 @@ public class Main extends PApplet {
 			}
 			case 2: //game Mode
 			{
-				song.play();
-				//game loop
-				if(running)
-				{
-					currentTime += timeDelta;
-					
-					if(kickDetector.detectKick())
-					{
-						generateNote(WIDTH / 2);
-					}
-					processGameObject();
-					//moved to a separate method to avoid clutter
-					stats();
-				}//end gameLoop
+				
+				runGame();
+				processGameObject();
 				break;
 			}
 			case 3: //game Over
@@ -258,6 +254,25 @@ public class Main extends PApplet {
 			}
 		}
 	}//end draw()
+	
+	public void runGame()
+	{
+		//game loop
+		if(running)
+		{
+			song.play();
+			currentTime += timeDelta;
+			
+			if(kickDetector.detectKick())
+			{
+				generateNote(WIDTH / 2);
+			}
+			
+			//moved to a separate method to avoid clutter
+			stats();
+		}//end gameLoop
+		
+	}//end game
 	
 	public void selecter()
 	{

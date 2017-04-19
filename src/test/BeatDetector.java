@@ -55,8 +55,8 @@ public class BeatDetector implements AudioListener{
 		lpf = new LowPassFS(1000, song.sampleRate());
 		hpf = new HighPassSP(500, song.sampleRate());
 		
-		song.addEffect(lpf);
-		song.addEffect(hpf);
+		//song.addEffect(lpf);
+		//ong.addEffect(hpf);
 		
 	}
 	
