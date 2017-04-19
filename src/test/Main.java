@@ -6,7 +6,8 @@ package test;
  * menu methods/class (David)
  *  (David)
  *  
- *  Notes spawn in numerous places for each hit. Makes the game impossible
+ *  1)Notes spawn in numerous places for each hit. Makes the game impossible
+ *  2)A way for the user to Enter a file for them to play the game with
  */
 import java.util.ArrayList;
 import java.util.Random;
@@ -69,6 +70,7 @@ public class Main extends PApplet {
 	//Objects
 	Note n;
 	Player player;
+	Database db;
 	
 	//Images
 	PImage test;
@@ -129,6 +131,9 @@ public class Main extends PApplet {
 		running = true;
 		gameState = 1;
 		
+		//dataabse stuff
+		db = new Database();
+		
 		
 	}//end setup()
 	
@@ -163,7 +168,7 @@ public class Main extends PApplet {
 		
 		Player p = (Player)obj;
 		//p.sayHello();
-		System.out.println(p.getHealth());
+		//System.out.println(p.getHealth());
 		
 		
 		if(p.checkIsDead())
@@ -239,6 +244,9 @@ public class Main extends PApplet {
 				//game loop
 				if(running)
 				{
+					//testing
+					//db.printScores();
+					
 					currentTime += timeDelta;
 					
 					if(kickDetector.detectKick())

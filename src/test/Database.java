@@ -37,7 +37,7 @@ public class Database {
 	
 	public void printScores()
 	{
-		
+		System.out.println("Testing database clase");
 	}
 
 }
