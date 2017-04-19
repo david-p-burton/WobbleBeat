@@ -13,7 +13,7 @@ import ddf.minim.ugens.*;
 public class BeatDetector implements AudioListener{
 	
 	private AudioPlayer song;
-	
+	private AudioPlayer songToBeFiltered;
 	
 	
 	private PApplet p;
@@ -32,10 +32,10 @@ public class BeatDetector implements AudioListener{
 	
 	
 	@SuppressWarnings("deprecation")
-	public BeatDetector(AudioPlayer song,BeatDetect beat, PApplet p, int sensitivity)
+	public BeatDetector(AudioPlayer song,AudioPlayer songToBeFiltered, BeatDetect beat, PApplet p, int sensitivity)
 	{
 		this.song = song;
-		//this.songWithFilter =  song;
+		this.songToBeFiltered = songToBeFiltered;
 		this.beat = beat;
 		this.p = p;
 	
@@ -51,12 +51,15 @@ public class BeatDetector implements AudioListener{
 		radius = 100;
 		beat.detectMode(0);//(0) = freqeuncey mode (1) = soundEnergy mode
 		
+		//(Ro)
+		//Using these to isolate kick and snare freqeuncy may help trigger notes better
+		//However it will play the song with the filter on it so it sounds different.
+		//Need to figure out a way to paly song without filter but generate notes with filter :-/
+		lpf = new LowPassFS(80 , song.sampleRate());
+		hpf = new HighPassSP(20000, song.sampleRate());
 		
-		lpf = new LowPassFS(1000, song.sampleRate());
-		hpf = new HighPassSP(500, song.sampleRate());
-		
-		song.addEffect(lpf);
-		song.addEffect(hpf);
+		//song.addEffect(lpf);
+		//song.addEffect(hpf);
 		
 	}
 	
@@ -64,10 +67,11 @@ public class BeatDetector implements AudioListener{
 	public boolean detectKick()
 	{
 		//song.play();
+		//beat.detect(song.mix);
 		beat.detect(song.mix);
-		
 	
 		return beat.isKick();
+		
 		
 			
 	}//end detectKick()

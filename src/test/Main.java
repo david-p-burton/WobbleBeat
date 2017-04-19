@@ -5,6 +5,8 @@ package test;
  * method to determine tempo (David) 
  * menu methods/class (David)
  *  (David)
+ *  
+ *  Notes spawn in numerous places for each hit. Makes the game impossible
  */
 import java.util.ArrayList;
 import java.util.Random;
@@ -40,6 +42,7 @@ public class Main extends PApplet {
 	//Audio stuff
 	Minim minim;
 	AudioPlayer song;
+	AudioPlayer songToBeFiltered;
 	FFT fft;
 	BeatDetector kickDetector;
 	BeatDetector snareDetector;
@@ -92,7 +95,7 @@ public class Main extends PApplet {
 		
 		//two different tracks to test, one with just drums one dense metal mix
 		song = minim.loadFile("Rock drum loop 1 (160 bpm).mp3", FRAME_SIZE);
-		
+		songToBeFiltered = minim.loadFile("Rock drum loop 1 (160 bpm).mp3", FRAME_SIZE);
 		//song = minim.loadFile("Scarlett.mp3", FRAME_SIZE);	
 		
 		//game font
@@ -110,7 +113,7 @@ public class Main extends PApplet {
 		//the last parameter is the sensitivity. 
 		//It seems to work best, if using multiple beatDetectors to have it set to zero
 		//if using one to check for each beat.it can be adjusted. This seems to depend on song tempo.
-		kickDetector = new BeatDetector(song,beat,this,10);
+		kickDetector = new BeatDetector(song,songToBeFiltered,beat,this,10);
 		//snareDetector = new BeatDetector(song, beat, this,0);
 		//hatDetector = new BeatDetector(song, beat, this,0);
 		//beatDetector = new BeatDetector(song,beat, this,300);

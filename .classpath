@@ -9,5 +9,6 @@
 	<classpathentry kind="lib" path="C:/Users/Ronan/Documents/Processing/libraries/minim/library/tritonus_aos.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Ronan/Documents/Processing/libraries/minim/library/tritonus_share.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Ronan/Documents/processing-3.2.3-windows64/processing-3.2.3/core/library/core.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ronan/Documents/JDBC Driver/sqlite-jdbc-3.16.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
