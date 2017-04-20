@@ -9,28 +9,62 @@ import java.util.ArrayList;
 
 public class Database {
 	
-	//Bryans boiler player code
-	static String driver = "org.sqlite.JDBC";
-	String url = "jdbc:sqlite:tunes.sqlite";
+	//static String driver = "org.sqlite.JDBC";
+	private String driver = "org.sqlite.JDBC";
 	
-	static
-	{
-		try
-		{
-			Class.forName(driver);
-		}
-		catch (ClassNotFoundException e)
-		{
-			e.printStackTrace();
-		}
-	}
+	//How do we d this so it wont be just local database?
+	private String url = "jdbc:mysql://loclalhost:3306/wobblebeatscores";
+	//private String url = "jdbc:mysql://loclalhost/wobblebeatscores";
+	private String user = "root";
+	private String password = "";
 	
-	public Database()
+	
+	private Connection con;
+	
+	public Database() 
 	{
 		
 	}
 	
+	public void connect() throws ClassNotFoundException
+	{
+		/*
+		try
+		{
+			Class.forName(driver);
+			con = DriverManager.getConnection(url);
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+		
+		if(con == null)
+		{
+			System.out.print("Failed");
+		}
+		*/
+		try{
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/wobblebeatscores",user,password);
+			
+			if(con != null)
+			{
+				System.out.println("CONNECTED");
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	
+	}
+	
+	
+
+	
 	public void loadScores()
+	{
+		
+	}
+	
+	public void writeScore(Score score)
 	{
 		
 	}

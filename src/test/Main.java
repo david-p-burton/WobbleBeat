@@ -1,4 +1,5 @@
 package test;
+import java.sql.SQLException;
 /*
  * TO DO and NOTES:
  * Need to cap how many notes are generated
@@ -8,6 +9,12 @@ package test;
  *  
  *  1)Too many notes are being generated.Making game impossible
  *  	--Need to imrpove how well they are trigger/detected. Maybe using the Low and high pass filters?
+ *  
+ *  2)http://stackoverflow.com/questions/2839321/connect-java-to-a-mysql-database 
+ *  	--Tutorial on how to connect to a database
+ *  	--need to download and put in build path mysql-connector.jar
+ *  	--and download https://bitbucket.org/xerial/sqlite-jdbc/downloads/
+ *  	--Also you need to provide "root" as user name and "" as password. This should be changed?? 
  */
 import java.util.ArrayList;
 import java.util.Random;
@@ -70,6 +77,7 @@ public class Main extends PApplet {
 	Note n;
 	Player player;
 	Score score;
+	Database db;
 	
 	//Images
 	PImage test;
@@ -131,6 +139,16 @@ public class Main extends PApplet {
 		gameState = 1;
 		
 		
+		db = new Database();
+		try {
+			db.connect();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
 	}//end setup()
 	
 	public void generateNote(int startPos)
@@ -163,15 +181,13 @@ public class Main extends PApplet {
 		GameObject obj = gameObjects.get(0);
 		
 		Player p = (Player)obj;
-		//p.sayHello();
-		System.out.println(p.getHealth());
-		
 		
 		if(p.checkIsDead())
 		{
 			song.close();
 			
 			score = new Score("Ronan",p.getScore(),currentTime);
+			db.loadScores();
 			
 			text("GAME OVER", WIDTH/2,HEIGHT/2);
 			running = false;
