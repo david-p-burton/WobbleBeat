@@ -14,7 +14,7 @@ import java.sql.SQLException;
  *  	--Tutorial on how to connect to a database
  *  	--need to download and put in build path mysql-connector.jar
  *  	--and download https://bitbucket.org/xerial/sqlite-jdbc/downloads/
- *  	--Also you need to provide "root" as user name and "" as password. This should be changed?? 
+ *  	--Also you need to provide "root" as user name and "" as password. 
  */
 import java.util.ArrayList;
 import java.util.Random;
@@ -325,6 +325,18 @@ public class Main extends PApplet {
 		text("Score " + player.getScore(),10,20);
 		text("Lives " + player.getHealth(),10,30);
 		//System.out.println("ArrayList size: " + gameObjects.size());
+	}
+	
+	//close connection on exit
+	public void stop()
+	{
+		try {
+			db.closeConnection();
+			super.stop();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void mouseClicked()

@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import com.mysql.jdbc.ResultSetMetaData;
 import com.mysql.jdbc.Statement;
 
 public class Database {
@@ -21,6 +22,8 @@ public class Database {
 	
 	ResultSet rs;
 	private Connection con;
+	
+	private String[] columnName;
 	
 	public Database() 
 	{
@@ -54,12 +57,32 @@ public class Database {
 		{
 			rs = ps.executeQuery();
 			
+			//get num of columns
+			ResultSetMetaData rsMetaData = (ResultSetMetaData) rs.getMetaData();
+			int numberOfColumns = rsMetaData.getColumnCount();
+			
+			//make array for column names
+			columnName = new String[numberOfColumns];
+			
+			for (int i = 1; i <= numberOfColumns; i++)
+			{
+			   columnName[i-1] = rsMetaData.getColumnLabel(i);
+			   System.out.print(columnName[i-1] + "|\t");
+			}
+			
+			System.out.println();
+			
+			//System.out.println("Num of cols: " + numberOfColumns);
+			
 			while(rs.next())
 			{
-					int index = 1;
-					String val = rs.getString(index);
-					System.out.println(val);//prints id number
-					index++;
+				//starts at 1
+				for(int i = 1; i < numberOfColumns;i++)
+				{
+					String val = rs.getString(i);
+					System.out.print(val + "\t\t");
+				}
+				System.out.println();	
 			}
 			
 		}			
@@ -71,6 +94,15 @@ public class Database {
 		}
 		
 		
+	}
+	
+	public void closeConnection() throws SQLException
+	{
+		if(con != null)
+			con.close();
+		
+		if(rs != null)
+			rs.close();
 	}
 	
 	public void writeScore(Score score)
