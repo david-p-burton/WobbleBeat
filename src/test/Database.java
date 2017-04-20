@@ -30,26 +30,6 @@ public class Database {
 		
 	}
 	
-	public void connect() throws ClassNotFoundException
-	{
-	
-		try{
-			Connection con = DriverManager.getConnection(url,user,password);
-			
-			if(con != null)
-			{
-				System.out.println("CONNECTED");
-			}
-			
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-	
-	}
-	
-	
-
-	
 	public void loadScores()
 	{
 		try(Connection c = DriverManager.getConnection(url,user,password);
@@ -72,8 +52,7 @@ public class Database {
 			
 			System.out.println();
 			
-			//System.out.println("Num of cols: " + numberOfColumns);
-			
+			//display contents of table
 			while(rs.next())
 			{
 				//starts at 1
@@ -94,7 +73,7 @@ public class Database {
 		}
 		
 		
-	}
+	}//end load
 	
 	public void closeConnection() throws SQLException
 	{

@@ -15,6 +15,8 @@ import java.sql.SQLException;
  *  	--need to download and put in build path mysql-connector.jar
  *  	--and download https://bitbucket.org/xerial/sqlite-jdbc/downloads/
  *  	--Also you need to provide "root" as user name and "" as password. 
+ *  
+ *  3) Need a way for 3 of us to access the same database??
  */
 import java.util.ArrayList;
 import java.util.Random;
