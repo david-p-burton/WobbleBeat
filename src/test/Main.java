@@ -140,12 +140,7 @@ public class Main extends PApplet {
 		
 		
 		db = new Database();
-		try {
-			db.connect();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		db.loadScores();
 		
 		
 		

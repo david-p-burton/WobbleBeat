@@ -7,18 +7,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import com.mysql.jdbc.Statement;
+
 public class Database {
 	
 	//static String driver = "org.sqlite.JDBC";
 	private String driver = "org.sqlite.JDBC";
 	
 	//How do we d this so it wont be just local database?
-	private String url = "jdbc:mysql://loclalhost:3306/wobblebeatscores";
-	//private String url = "jdbc:mysql://loclalhost/wobblebeatscores";
+	private String url = "jdbc:mysql://localhost:3306/wobblebeatscores";
 	private String user = "root";
 	private String password = "";
 	
-	
+	ResultSet rs;
 	private Connection con;
 	
 	public Database() 
@@ -28,22 +29,9 @@ public class Database {
 	
 	public void connect() throws ClassNotFoundException
 	{
-		/*
-		try
-		{
-			Class.forName(driver);
-			con = DriverManager.getConnection(url);
-		}catch(SQLException e){
-			e.printStackTrace();
-		}
-		
-		if(con == null)
-		{
-			System.out.print("Failed");
-		}
-		*/
+	
 		try{
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/wobblebeatscores",user,password);
+			Connection con = DriverManager.getConnection(url,user,password);
 			
 			if(con != null)
 			{
@@ -61,6 +49,27 @@ public class Database {
 	
 	public void loadScores()
 	{
+		try(Connection c = DriverManager.getConnection(url,user,password);
+				PreparedStatement ps = c.prepareStatement("select * from scores"))
+		{
+			rs = ps.executeQuery();
+			
+			while(rs.next())
+			{
+					int index = 1;
+					String val = rs.getString(index);
+					System.out.println(val);//prints id number
+					index++;
+			}
+			
+		}			
+		
+		catch(SQLException e)
+		{
+			System.out.println("SQL Exception");
+			e.printStackTrace();
+		}
+		
 		
 	}
 	
