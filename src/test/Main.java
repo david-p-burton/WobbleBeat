@@ -139,7 +139,7 @@ public class Main extends PApplet {
 		maxNotes = 1;//max notes per second
 		
 		running = true;
-		gameState = 1;
+		gameState = 0;
 		
 		
 		//db = new Database();
@@ -184,10 +184,18 @@ public class Main extends PApplet {
 		if(p.checkIsDead())
 		{
 			gameState = 3;
-			song.close();
+			song.pause();
+			song.rewind();
 			
 			score = new Score("Ronan",p.getScore(),currentTime);
 			//db.loadScores();
+			
+			//remove everything bar player
+			for(int i = gameObjects.size() - 1; i >= 1; i--)
+		      {
+		        GameObject use = gameObjects.get(i);
+		        gameObjects.remove(use);
+		      }
 			
 			textAlign(CENTER, CENTER);
 			text("GAME OVER", WIDTH/2,HEIGHT/2);
@@ -238,17 +246,20 @@ public class Main extends PApplet {
 	
 	public void draw()
 	{
-		System.out.println(counter);
+		System.out.println(player.isDead);
 		background(0);
 		
 		switch(gameState)
 		{
 			case 0: //spare
 			{
+				player.isDead = false;
+				gameState = 1;
 				break;
 			}
 			case 1: //game menu
 			{
+				
 				textAlign(CENTER, CENTER);
 				textFont(gameText, 20);
 			    text("START", (width / 2), (float)(height * 0.8));
@@ -258,7 +269,6 @@ public class Main extends PApplet {
 			}
 			case 2: //game Mode
 			{
-				
 				runGame();
 				processGameObject();
 				break;
@@ -266,9 +276,11 @@ public class Main extends PApplet {
 			case 3: //game Over
 			{
 				processGameObject();
+				counter = 0;
+				player.reset();
 				if(checkKey(' '))
 				{
-					gameState = 1;
+					gameState = 0;
 				}
 				break;
 			}

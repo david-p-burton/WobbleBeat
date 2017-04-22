@@ -7,7 +7,7 @@ public class Player extends GameObject{
 	
 	private String name;
 	private int health;
-	private boolean isDead;
+	public boolean isDead;
 	private int score;
 	private PApplet p;
 	
@@ -46,6 +46,13 @@ public class Player extends GameObject{
 	public void incrementScore()
 	{
 		score++;
+	}
+	
+	public void reset()
+	{
+		score = 0;
+		health = 10;
+		//isDead = false;
 	}
 	
 	public int getScore()
