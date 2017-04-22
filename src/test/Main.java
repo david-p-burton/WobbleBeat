@@ -246,7 +246,7 @@ public class Main extends PApplet {
 	
 	public void draw()
 	{
-		System.out.println(player.isDead);
+		System.out.println(player.isDead + " " + gameState);
 		background(0);
 		
 		switch(gameState)
@@ -278,6 +278,7 @@ public class Main extends PApplet {
 				processGameObject();
 				counter = 0;
 				player.reset();
+				running = true;
 				if(checkKey(' '))
 				{
 					gameState = 0;
