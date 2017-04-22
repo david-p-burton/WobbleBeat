@@ -79,7 +79,7 @@ public class Main extends PApplet {
 	Note n;
 	Player player;
 	Score score;
-	Database db;
+	//Database db;
 	
 	//Images
 	PImage test;
@@ -94,7 +94,8 @@ public class Main extends PApplet {
 	private static int maxNotes;
 	//David
 	private static float tempoRate;
-	private static int selecter;
+	private static int counter;
+	private static int selecter = 1;
 
 	
 	@SuppressWarnings("deprecation")
@@ -141,8 +142,8 @@ public class Main extends PApplet {
 		gameState = 1;
 		
 		
-		db = new Database();
-		db.loadScores();
+		//db = new Database();
+		//db.loadScores();
 		
 		
 		
@@ -162,6 +163,7 @@ public class Main extends PApplet {
 		{
 			Note n = new Note(randPosX,randPosY, 20, 1, this);
 			gameObjects.add(n);
+			counter++;
 			gameObjectCount++;
 		}
 		else
@@ -181,11 +183,13 @@ public class Main extends PApplet {
 		
 		if(p.checkIsDead())
 		{
+			gameState = 3;
 			song.close();
 			
 			score = new Score("Ronan",p.getScore(),currentTime);
-			db.loadScores();
+			//db.loadScores();
 			
+			textAlign(CENTER, CENTER);
 			text("GAME OVER", WIDTH/2,HEIGHT/2);
 			running = false;
 		}
@@ -209,6 +213,8 @@ public class Main extends PApplet {
 					//text("Test", WIDTH/2,HEIGHT/2);
 					gameObjects.remove(n);
 					p.incrementScore();
+					//counter for counting amount of notes
+					counter--;
 				}
 				
 				if(n.getY() > HEIGHT)
@@ -232,7 +238,7 @@ public class Main extends PApplet {
 	
 	public void draw()
 	{
-		
+		System.out.println(counter);
 		background(0);
 		
 		switch(gameState)
@@ -259,6 +265,11 @@ public class Main extends PApplet {
 			}
 			case 3: //game Over
 			{
+				processGameObject();
+				if(checkKey(' '))
+				{
+					gameState = 1;
+				}
 				break;
 			}
 			default: //switch should never get to this state - left blank
@@ -276,7 +287,7 @@ public class Main extends PApplet {
 			song.play();
 			currentTime += timeDelta;
 			
-			if(kickDetector.detectKick())
+			if(kickDetector.detectKick() && counter < 20)
 			{
 				generateNote(WIDTH / 2);
 			}
@@ -312,6 +323,7 @@ public class Main extends PApplet {
 		
 		if(selecter == 1 && checkKey(' '))
 		{
+			
 		    gameState = 2;
 		}
 		else if(selecter == 0 && checkKey(' '))
@@ -322,11 +334,11 @@ public class Main extends PApplet {
 	
 	public void stats()
 	{
+		textAlign(LEFT, CENTER);
 		textFont(gameText, 10);
 		text("Time " + currentTime,10,10);
 		text("Score " + player.getScore(),10,20);
 		text("Lives " + player.getHealth(),10,30);
-		//System.out.println("ArrayList size: " + gameObjects.size());
 	}
 	
 	//close connection on exit
@@ -353,6 +365,7 @@ public class Main extends PApplet {
         PApplet.runSketch( a, new Main());
 	}
 	
+	//Methods for registering keystrokes
 	public void keyPressed()
 	{
 	  keyStrokes[keyCode] = true;
