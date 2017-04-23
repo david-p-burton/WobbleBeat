@@ -225,7 +225,7 @@ public class Main extends PApplet {
 		      }
 			
 			textAlign(CENTER, CENTER);
-			text("GAME OVER", WIDTH/2,HEIGHT/2);
+			text("GAME OVER\nPRESS ANY KEY TO RETURN TO MENU", WIDTH/2,HEIGHT/2);
 			running = false;
 		}
 		
@@ -321,7 +321,7 @@ public class Main extends PApplet {
 				}
 				
 				running = true;
-				if(checkKey(' '))
+				if(keyPressed)
 				{
 					gameState = 0;
 				}
