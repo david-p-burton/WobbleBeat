@@ -79,6 +79,7 @@ public class Main extends PApplet {
 	Note n;
 	Player player;
 	Score score;
+	Instruction controls;
 	//Database db;
 	
 	//Images
@@ -141,6 +142,9 @@ public class Main extends PApplet {
 		running = true;
 		gameState = 0;
 		
+		//control instructions object
+		controls = new Instruction(width/2, 150, this, gameText);
+		
 		
 		//db = new Database();
 		//db.loadScores();
@@ -154,14 +158,31 @@ public class Main extends PApplet {
 		//Find a better way to limit how many notes are created: Need one note per hit
 		
 		//System.out.println("num of objects: " + gameObjectCount);
-		randPosX = rand.nextInt(WIDTH);
+		randPosY = 200;
 		//D - make game "fairer" by making notes spawn at fixed locations?
 		//D - placeholder number = 200
-		randPosY = 200;
+		int guessWork;
+		guessWork = (int)random(1, 5);
+		if(guessWork == 1)
+		{
+			randPosX = WIDTH / 5;
+		}
+		else if(guessWork == 2)
+		{
+			randPosX = 2 * (WIDTH / 5);
+		}
+		else if (guessWork == 3)
+		{
+			randPosX = 3 * (WIDTH / 5);
+		}
+		else
+		{
+			randPosX = 4 * (WIDTH / 5);
+		}
 		
 		if(gameObjectCount < maxNotes)
 		{
-			Note n = new Note(randPosX,randPosY, 20, 1, this);
+			Note n = new Note(randPosX, randPosY, 20, 2, this);
 			gameObjects.add(n);
 			counter++;
 			gameObjectCount++;

@@ -52,7 +52,6 @@ public class Player extends GameObject{
 	{
 		score = 0;
 		health = 10;
-		//isDead = false;
 	}
 	
 	public int getScore()
