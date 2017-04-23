@@ -58,6 +58,11 @@ public class Player extends GameObject{
 	{
 		return score;
 	}
+	
+	public String getName()
+	{
+		return name;
+	}
 	@Override
 	public void render() {
 		// TODO Auto-generated method stub

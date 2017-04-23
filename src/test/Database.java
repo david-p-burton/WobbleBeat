@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import com.mysql.jdbc.ResultSetMetaData;
 import com.mysql.jdbc.Statement;
 
+import processing.core.PApplet;
+
 public class Database {
 	
 	//static String driver = "org.sqlite.JDBC";
@@ -20,14 +22,47 @@ public class Database {
 	private String user = "root";
 	private String password = "";
 	
+	//used to store data from score objects(id is auto increment in database)
+	private String playeName;
+	private int playerScore;
+	private float playerTime;
+	
+	//used for processing libray
+	PApplet p;
+	
 	ResultSet rs;
-	private Connection con;
 	
+	
+	//stores the column names from the database for printing to screen
 	private String[] columnName;
+	private ArrayList<Score> listOfScores;
+	private Score tempScore;
 	
-	public Database() 
+	//padding used for scoreScreen text
+	private float textX, textY;
+	private int textPadding;
+	private int displayIndex;
+	
+	
+	public Database(PApplet p) 
 	{
+		this.p = p;
+		textX = 100;
+		textY = 100;
+		textPadding = 150;
+		displayIndex = 1;
+		listOfScores = new ArrayList<Score>();
 		
+		
+		try
+		{
+			Class.forName(driver);
+		}
+		catch (ClassNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+
 	}
 	
 	public void loadScores()
@@ -44,28 +79,42 @@ public class Database {
 			//make array for column names
 			columnName = new String[numberOfColumns];
 			
+			//fill string array with column names so they can be printed
 			for (int i = 1; i <= numberOfColumns; i++)
 			{
 			   columnName[i-1] = rsMetaData.getColumnLabel(i);
-			   System.out.print(columnName[i-1] + "|\t");
 			}
 			
-			System.out.println();
+			//display Column names
+			p.textSize(20);
+			p.text("Leaderboard", p.width/2, 50);
+			p.textSize(12);
+			p.text(columnName[0], textX, textY);
+			p.text(columnName[1], textX + textPadding, textY);
+			p.text(columnName[2], textX + (textPadding * 2), textY);
 			
+			
+		
 			//display contents of table
 			while(rs.next())
 			{
+				
 				//starts at 1
 				for(int i = 1; i < numberOfColumns;i++)
 				{
-					String val = rs.getString(i);
-					System.out.print(val + "\t\t");
+				
+					String name = rs.getString("PlayerName");
+					int s = rs.getInt("PlayerScore");
+					float t = rs.getFloat("PlayerTime");
+					tempScore = new Score(name,s,t);
+					
+					listOfScores.add(tempScore);
+					
 				}
-				System.out.println();	
+				
 			}
 			
 		}			
-		
 		catch(SQLException e)
 		{
 			System.out.println("SQL Exception");
@@ -75,23 +124,57 @@ public class Database {
 		
 	}//end load
 	
+	public void writeScore(Score score) throws SQLException
+	{
+		try(Connection c = DriverManager.getConnection(url,user,password);
+				PreparedStatement ps = c.prepareStatement("insert into scores (PlayerName,PlayerScore,PlayerTime) " +  "VALUES (?, ?, ?)"))
+		{
+			
+			playeName = score.getPlayerName();
+			playerScore = score.getPlayerScore();
+			playerTime = score.getTimeLasted();
+			
+			ps.setString(1, playeName);
+			ps.setInt(2, playerScore);
+			ps.setFloat(3,playerTime);
+			
+			ps.executeUpdate();
+			
+			//Close once done??
+			if(c != null)
+				c.close();
+		}
+		catch(SQLException e)
+		{
+			System.out.println("SQL Exception");
+			e.printStackTrace();
+		}
+		
+			
+               
+	}//end write scores
+	
 	public void closeConnection() throws SQLException
 	{
-		if(con != null)
-			con.close();
 		
 		if(rs != null)
 			rs.close();
 	}
 	
-	public void writeScore(Score score)
-	{
-		
-	}
+	
 	
 	public void printScores()
 	{
-		System.out.println("Testing database clase");
+		displayIndex = 0;
+		int yPadding = 50;
+		while(displayIndex < listOfScores.size())
+		{
+			p.text(listOfScores.get(displayIndex).getPlayerName(), textX, textY + yPadding);
+			displayIndex++;
+			
+			yPadding += 50;
+		}
+		
 	}
 
 }

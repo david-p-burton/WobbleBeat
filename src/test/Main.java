@@ -17,6 +17,8 @@ import java.sql.SQLException;
  *  	--Also you need to provide "root" as user name and "" as password. 
  *  
  *  3) Need a way for 3 of us to access the same database??
+ *  
+ *  4)Need to get player to input name 
  */
 import java.util.ArrayList;
 import java.util.Random;
@@ -80,7 +82,7 @@ public class Main extends PApplet {
 	Player player;
 	Score score;
 	Instruction controls;
-	//Database db;
+	Database db;
 	
 	//Images
 	PImage test;
@@ -97,6 +99,7 @@ public class Main extends PApplet {
 	private static float tempoRate;
 	private static int counter;
 	private static int selecter = 1;
+	private static boolean scoreWritten;
 
 	
 	@SuppressWarnings("deprecation")
@@ -146,8 +149,9 @@ public class Main extends PApplet {
 		controls = new Instruction(width/2, 150, this, gameText);
 		
 		
-		//db = new Database();
-		//db.loadScores();
+		db = new Database(this);
+		
+		scoreWritten = false;
 		
 		
 		
@@ -208,7 +212,9 @@ public class Main extends PApplet {
 			song.pause();
 			song.rewind();
 			
-			score = new Score("Ronan",p.getScore(),currentTime);
+			score = new Score(p.getName(),p.getScore(),currentTime);
+			
+			
 			//db.loadScores();
 			
 			//remove everything bar player
@@ -267,7 +273,7 @@ public class Main extends PApplet {
 	
 	public void draw()
 	{
-		System.out.println(player.isDead + " " + gameState);
+		//System.out.println(player.isDead + " " + gameState);
 		background(0);
 		
 		switch(gameState)
@@ -275,12 +281,13 @@ public class Main extends PApplet {
 			case 0: //spare
 			{
 				player.isDead = false;
+				scoreWritten = false;//reset this so game can be played again and new score written
 				gameState = 1;
 				break;
 			}
 			case 1: //game menu
 			{
-				
+				scoreWritten = false;
 				textAlign(CENTER, CENTER);
 				textFont(gameText, 20);
 			    text("START", (width / 2), (float)(height * 0.8));
@@ -292,6 +299,7 @@ public class Main extends PApplet {
 			{
 				runGame();
 				processGameObject();
+				
 				break;
 			}
 			case 3: //game Over
@@ -299,11 +307,30 @@ public class Main extends PApplet {
 				processGameObject();
 				counter = 0;
 				player.reset();
+				
+				//write score only once to database
+				if(!scoreWritten)
+				{
+					try {
+						db.writeScore(score);
+						scoreWritten = true;
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
 				running = true;
 				if(checkKey(' '))
 				{
 					gameState = 0;
 				}
+				break;
+			}
+			case 4:
+			{
+				db.loadScores();
+				db.printScores();
 				break;
 			}
 			default: //switch should never get to this state - left blank
@@ -354,12 +381,19 @@ public class Main extends PApplet {
 		}
 		   
 		
-		
 		if(selecter == 1 && checkKey(' '))
 		{
 			
 		    gameState = 2;
 		}
+		//need to be rewritten for menu. Just for testing
+		if(selecter == 1 && checkKey('a'))
+		{
+			
+		    gameState = 4;
+		}
+		
+		
 		else if(selecter == 0 && checkKey(' '))
 		{
 			exit();
