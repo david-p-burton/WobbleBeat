@@ -145,9 +145,6 @@ public class Main extends PApplet {
 		running = true;
 		gameState = 0;
 		
-		//control instructions object
-		controls = new Instruction(width/2, 150, this, gameText);
-		
 		
 		db = new Database(this);
 		
@@ -282,6 +279,11 @@ public class Main extends PApplet {
 			{
 				player.isDead = false;
 				scoreWritten = false;//reset this so game can be played again and new score written
+				
+				//control instructions object
+				controls = new Instruction(width/2, 150, this, gameText);
+				gameObjects.add(controls);
+				
 				gameState = 1;
 				break;
 			}
@@ -292,6 +294,8 @@ public class Main extends PApplet {
 				textFont(gameText, 20);
 			    text("START", (width / 2), (float)(height * 0.8));
 			    text("EXIT", (width / 2), (float)(height * 0.85));
+			    controls.render();
+			    controls.animate();
 			    selecter();
 				break;
 			}
@@ -373,7 +377,7 @@ public class Main extends PApplet {
 		
 		if(selecter == 1)
 		{
-		  image(test, width/3, (float)(height * 0.77) + 5, 30, 30);
+			image(test, width/3, (float)(height * 0.77) + 5, 30, 30);
 		}
 		if(selecter == 0)
 		{
@@ -383,13 +387,22 @@ public class Main extends PApplet {
 		
 		if(selecter == 1 && checkKey(' '))
 		{
-			
+			for(int i = 0; i < gameObjects.size();i++)
+			{
+				GameObject o = gameObjects.get(i);
+				
+				//check for note off screen and if clicked, if so remove it
+				if(o instanceof Instruction)
+				{
+					gameObjects.remove(o);
+				}
+			}
+
 		    gameState = 2;
 		}
 		//need to be rewritten for menu. Just for testing
 		if(selecter == 1 && checkKey('a'))
 		{
-			
 		    gameState = 4;
 		}
 		
