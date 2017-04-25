@@ -30,7 +30,7 @@ public class Note extends GameObject {
 		animationKey = 1;
 		sprites = new PImage[animationKey];
 		
-		sprites[0] = p.loadImage("explosion.png");
+		sprites[0] = p.loadImage("8th Note.png");
 		
 		
 	}
