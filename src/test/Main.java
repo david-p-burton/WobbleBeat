@@ -320,6 +320,18 @@ public class Main extends PApplet {
 
 				cp5.remove("Player Name");
 				
+				for(int i = 0; i < gameObjects.size();i++)
+				{
+					GameObject o = gameObjects.get(i);
+					
+					if(o instanceof Instruction)
+					{
+						gameObjects.remove(o);
+					}
+				}
+
+
+				
 				break;
 			}
 			case 3: //game Over
