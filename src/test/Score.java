@@ -1,4 +1,4 @@
-package test;
+package src.test;
 
 /*
  * Scores will be added to database

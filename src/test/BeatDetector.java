@@ -1,4 +1,4 @@
-package test;
+package src.test;
 
 import ddf.minim.AudioListener;
 import ddf.minim.AudioOutput;

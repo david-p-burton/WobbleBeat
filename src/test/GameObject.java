@@ -1,4 +1,4 @@
-package test;
+package src.test;
 
 //import processing.core.PVector;
 //import processing.core.PApplet;

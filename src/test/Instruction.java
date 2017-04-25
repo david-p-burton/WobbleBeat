@@ -1,4 +1,4 @@
-package test;
+package src.test;
 
 import processing.core.PApplet;
 import processing.core.PFont;
@@ -26,7 +26,7 @@ public class Instruction extends GameObject
 	{
 		p.textAlign(p.CENTER, p.CENTER);
 		p.textFont(gameText, fontSize);
-		System.out.println(rNumber);
+		System.out.println(fontSize);
 		rotating();
 	}
 	
@@ -40,22 +40,20 @@ public class Instruction extends GameObject
 	
 		if(increment > 0)
 		{
-			fontSize = p.lerp(fontSize, 11, 0.02f);
-			//rNumber = p.lerp(rNumber, PI/3, 0.01f);
+			fontSize = p.lerp(fontSize, 11, 0.008f);
 		}
 		else
 		{
-			fontSize = p.lerp(fontSize, 6, 0.02f);
-			//rNumber = p.lerp(rNumber, -PI/3, 0.01f);
+			fontSize = p.lerp(fontSize, 6, 0.008f);
 		}
 		
-		if(rNumber > 0.8)
+		if(fontSize <= 7.5 || fontSize >= 9)
 		{
-			rNumber = p.lerp(rNumber, -PI/3, 0.03f);
+			rNumber = p.lerp(rNumber, -PI/6, 0.01f);
 		}
 		else
 		{
-			rNumber = p.lerp(rNumber, PI/3, 0.03f);
+			rNumber = p.lerp(rNumber, PI/6, 0.01f);
 		}
 	}
 	
