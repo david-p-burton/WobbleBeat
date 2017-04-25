@@ -289,6 +289,8 @@ public class Main extends PApplet {
 			}
 			case 1: //game menu
 			{
+				
+				//TODO send to seperate class
 				scoreWritten = false;
 				textAlign(CENTER, CENTER);
 				textFont(gameText, 20);
@@ -303,7 +305,6 @@ public class Main extends PApplet {
 			{
 				runGame();
 				processGameObject();
-				
 				break;
 			}
 			case 3: //game Over

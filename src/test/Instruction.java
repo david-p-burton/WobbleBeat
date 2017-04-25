@@ -8,7 +8,7 @@ public class Instruction extends GameObject
 {
 	public PVector pos;
 	private PFont gameText;
-	private float fontSize, increment;
+	private float fontSize, increment, rNumber, PI;
 	private PApplet p;
 	private String words = "W & S to move selection arrow\nClick on the notes to raise score\nDon't let the notes reach the bottom of the page!";
 	
@@ -19,14 +19,15 @@ public class Instruction extends GameObject
 		this.gameText = gameText;
 		this.fontSize = 8;
 		this.increment = 0.03f;
+		this.PI = (float)(22/7);
 	}
 	
 	public void render()
 	{
 		p.textAlign(p.CENTER, p.CENTER);
 		p.textFont(gameText, fontSize);
-		p.text(words, pos.x, pos.y);
-		p.translate(0, 0);
+		System.out.println(rNumber);
+		rotating();
 	}
 	
 	public void animate()
@@ -40,11 +41,33 @@ public class Instruction extends GameObject
 		if(increment > 0)
 		{
 			fontSize = p.lerp(fontSize, 11, 0.02f);
+			//rNumber = p.lerp(rNumber, PI/3, 0.01f);
 		}
 		else
 		{
 			fontSize = p.lerp(fontSize, 6, 0.02f);
+			//rNumber = p.lerp(rNumber, -PI/3, 0.01f);
 		}
+		
+		if(rNumber > 0.8)
+		{
+			rNumber = p.lerp(rNumber, -PI/3, 0.03f);
+		}
+		else
+		{
+			rNumber = p.lerp(rNumber, PI/3, 0.03f);
+		}
+	}
+	
+	public void rotating()
+	{
+		p.pushMatrix();
+		
+			p.translate(pos.x, pos.y);
+			p.rotate(rNumber);
+			p.text(words, 0, 0);
+	
+		p.popMatrix();
 	}
 	public void update()
 	{
