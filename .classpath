@@ -2,14 +2,14 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/Users/Ronan/Documents/Processing/libraries/minim/library/jl1.0.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ronan/Documents/Processing/libraries/minim/library/jsminim.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ronan/Documents/Processing/libraries/minim/library/minim.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ronan/Documents/Processing/libraries/minim/library/mp3spi1.9.5.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ronan/Documents/Processing/libraries/minim/library/tritonus_aos.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ronan/Documents/Processing/libraries/minim/library/tritonus_share.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ronan/Documents/processing-3.2.3-windows64/processing-3.2.3/core/library/core.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ronan/Documents/mysql-connector-java-5.1.41/mysql-connector-java-5.1.41/mysql-connector-java-5.1.41-bin.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ronan/Documents/sqlite-jdbc-3.15.1.jar"/>
+	<classpathentry kind="lib" path="/Users/David/Desktop/javaOOP/sqlite-jdbc-3.16.1.jar"/>
+	<classpathentry kind="lib" path="/Users/David/Documents/Processing/libraries/minim/library/jl1.0.1.jar"/>
+	<classpathentry kind="lib" path="/Users/David/Documents/Processing/libraries/minim/library/jsminim.jar"/>
+	<classpathentry kind="lib" path="/Users/David/Documents/Processing/libraries/minim/library/minim.jar"/>
+	<classpathentry kind="lib" path="/Users/David/Documents/Processing/libraries/minim/library/mp3spi1.9.5.jar"/>
+	<classpathentry kind="lib" path="/Users/David/Documents/Processing/libraries/minim/library/tritonus_aos.jar"/>
+	<classpathentry kind="lib" path="/Users/David/Documents/Processing/libraries/minim/library/tritonus_share.jar"/>
+	<classpathentry kind="lib" path="/Applications/Processing.app/Contents/Java/core.jar"/>
+	<classpathentry kind="lib" path="/Users/David/Desktop/javaOOP/mysql-connector-java-5.1.41/mysql-connector-java-5.1.41-bin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
