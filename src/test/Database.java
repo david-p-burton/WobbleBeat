@@ -152,6 +152,7 @@ public class Database {
 	{
 		displayIndex = 0;
 		int yPadding = 50;
+		int scoresToDisplay = 8;
 		
 		//display Column names
 		p.textSize(20);
@@ -163,7 +164,7 @@ public class Database {
 		
 		//System.out.println(listOfScores.size());
 		
-		while(displayIndex < listOfScores.size())
+		while(displayIndex < scoresToDisplay)
 		{
 			p.text(listOfScores.get(displayIndex).getPlayerName(), textX, textY + yPadding);
 			p.text(listOfScores.get(displayIndex).getPlayerScore(), textX + 150, textY + yPadding);

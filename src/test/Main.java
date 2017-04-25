@@ -303,8 +303,8 @@ public class Main extends PApplet {
 			    text("START", (width / 2), (float)(height * 0.8));
 			    text("SCORES", (width / 2), (float)(height * 0.85));
 			    text("EXIT", (width / 2), (float)(height * 0.90));
-			    //controls.render();
-			    //controls.animate();
+			    controls.render();
+			    controls.animate();
 			    selecter();
 			    //set the player name with whatever was typed in the CP5 box
 			    player.setName(submit());
@@ -348,6 +348,7 @@ public class Main extends PApplet {
 			case 4:
 			{
 				cp5.remove("Player Name");
+				text("Press x to go back", (width / 2), (float)(height * 0.85));
 				if(!scoresLoaded)
 				{
 					db.loadScores();
