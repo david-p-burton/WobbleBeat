@@ -7,34 +7,20 @@ import java.sql.SQLException;
  * menu methods/class (David)
  *  (David)
  *  
- *  1)Too many notes are being generated.Making game impossible
- *  	--Need to imrpove how well they are trigger/detected. Maybe using the Low and high pass filters?
- *  
- *  2)http://stackoverflow.com/questions/2839321/connect-java-to-a-mysql-database 
- *  	--Tutorial on how to connect to a database
- *  	--need to download and put in build path mysql-connector.jar
- *  	--and download https://bitbucket.org/xerial/sqlite-jdbc/downloads/
- *  	--Also you need to provide "root" as user name and "" as password. 
- *  
- *  3) Need a way for 3 of us to access the same database??
- *  
- *  4)Need to get player to input name 
+ *	5)Powerup to give health and clear screen  
+ *	6)File system
  */
 import java.util.ArrayList;
 import java.util.Random;
 
-import ddf.minim.AudioInput;
 import ddf.minim.AudioPlayer;
-import ddf.minim.AudioSample;
 import ddf.minim.Minim;
-import ddf.minim.analysis.FFT;
-import ddf.minim.effects.LowPassFS;
 import ddf.minim.analysis.BeatDetect;
+import ddf.minim.analysis.FFT;
 import processing.core.PApplet;
 import processing.core.PFont;
 import processing.core.PImage;
-import ddf.minim.effects.*;
-import ddf.minim.ugens.*;
+import controlP5.*;
 
 public class Main extends PApplet {
 
@@ -95,11 +81,14 @@ public class Main extends PApplet {
 	private static float currentTime;
 	private static float noteSpawnTime;
 	private static int maxNotes;
-	//David
+
 	private static float tempoRate;
 	private static int counter;
 	private static int selecter = 1;
 	private static boolean scoreWritten;
+	private static boolean scoresLoaded;
+	private ControlP5 cp5;
+	
 
 	
 	@SuppressWarnings("deprecation")
@@ -135,7 +124,7 @@ public class Main extends PApplet {
 		//beatDetector = new BeatDetector(song,beat, this,300);
 		
 		//init player
-		player = new Player("Ro",10,this);
+		player = new Player("Default",10,this);
 		gameObjects.add(player);
 		
 		
@@ -146,13 +135,31 @@ public class Main extends PApplet {
 		gameState = 0;
 		
 		
+		//database stuff
 		db = new Database(this);
-		
+		//ensures scores are written and read only once
 		scoreWritten = false;
+		scoresLoaded = false;
 		
-		
-		
+		//for user to enter name
+		 cp5 = new ControlP5(this);
+
 	}//end setup()
+	
+	public void drawCP5Button()
+	{
+		cp5.addTextfield("Player Name").setPosition(WIDTH/3,HEIGHT/2).setSize(200, 40).setFocus(false);
+		 //cp5.setColorForeground(0);
+  		cp5.setColorBackground(125);
+  		
+		
+	}//end drawCP5
+	
+	//when this call it will get the contents of the CP5 box
+	public String submit()
+	{
+		return cp5.get(Textfield.class, "Player Name").getText();
+	}//end submit
 	
 	public void generateNote(int startPos)
 	{
@@ -183,7 +190,7 @@ public class Main extends PApplet {
 		
 		if(gameObjectCount < maxNotes)
 		{
-			Note n = new Note(randPosX, randPosY, 20, 2, this);
+			Note n = new Note(randPosX, randPosY, 20, 1.0f, this);
 			gameObjects.add(n);
 			counter++;
 			gameObjectCount++;
@@ -283,6 +290,7 @@ public class Main extends PApplet {
 				//control instructions object
 				controls = new Instruction(width/2, 150, this, gameText);
 				gameObjects.add(controls);
+				drawCP5Button();
 				
 				gameState = 1;
 				break;
@@ -295,16 +303,23 @@ public class Main extends PApplet {
 				textAlign(CENTER, CENTER);
 				textFont(gameText, 20);
 			    text("START", (width / 2), (float)(height * 0.8));
-			    text("EXIT", (width / 2), (float)(height * 0.85));
+			    text("SCORES", (width / 2), (float)(height * 0.85));
+			    text("EXIT", (width / 2), (float)(height * 0.90));
 			    controls.render();
 			    controls.animate();
 			    selecter();
+			    //set the player name with whatever was typed in the CP5 box
+			    player.setName(submit());
+			    
 				break;
 			}
 			case 2: //game Mode
 			{
 				runGame();
 				processGameObject();
+
+				cp5.remove("Player Name");
+				
 				break;
 			}
 			case 3: //game Over
@@ -312,6 +327,7 @@ public class Main extends PApplet {
 				processGameObject();
 				counter = 0;
 				player.reset();
+				cp5.remove("Player Name");
 				
 				//write score only once to database
 				if(!scoreWritten)
@@ -334,8 +350,24 @@ public class Main extends PApplet {
 			}
 			case 4:
 			{
-				db.loadScores();
-				db.printScores();
+				cp5.remove("Player Name");
+				text("Press x to go back", (width / 2), (float)(height * 0.85));
+				if(!scoresLoaded)
+				{
+					db.loadScores();
+					
+					scoresLoaded = true;
+				}
+				else
+				{
+					db.printScores();
+				}
+				
+				if(checkKey('x'))
+				{
+					gameState = 0;
+				}
+
 				break;
 			}
 			default: //switch should never get to this state - left blank
@@ -366,33 +398,52 @@ public class Main extends PApplet {
 	
 	public void selecter()
 	{
-		if(checkKey('w'))
-		{
-			selecter = 1;
-			
-		}
-		else if(checkKey('s'))
+		
+		if(checkKey('w'))//play
 		{
 			selecter = 0;
+			
+		}
+		else if(checkKey('s'))//leaderboard
+		{
+			selecter = 1;
 		}
 		
-		if(selecter == 1)
+	
+		else if(checkKey('x'))//exit
 		{
-			image(test, width/3, (float)(height * 0.77) + 5, 30, 30);
+			selecter = 2;
+		    
 		}
+		
+		//draw arrow that moves
 		if(selecter == 0)
 		{
-			image(test, width/3, (float)(height * 0.82) + 5, 30, 30);
+			image(test, width/3 - 10, (float)(height * 0.77) + 5, 30, 30);
+		}
+		if(selecter == 1)
+		{
+			image(test, width/3 - 10, (float)(height * 0.82) + 5, 30, 30);
+		}
+		
+		if(selecter == 2)
+		{
+			image(test, width/3 - 10, (float)(height * 0.87) + 5, 30, 30);
+		}
+		
+		//change game states
+		if(selecter == 1 && checkKey(' '))
+		{
+			gameState = 4;//score board
 		}
 		   
-		
-		if(selecter == 1 && checkKey(' '))
+		//remove arrow objects once game is running
+		if(selecter == 0 && checkKey(' '))
 		{
 			for(int i = 0; i < gameObjects.size();i++)
 			{
 				GameObject o = gameObjects.get(i);
 				
-				//check for note off screen and if clicked, if so remove it
 				if(o instanceof Instruction)
 				{
 					gameObjects.remove(o);
@@ -401,14 +452,10 @@ public class Main extends PApplet {
 
 		    gameState = 2;
 		}
-		//need to be rewritten for menu. Just for testing
-		if(selecter == 1 && checkKey('a'))
-		{
-		    gameState = 4;
-		}
+	
 		
 		
-		else if(selecter == 0 && checkKey(' '))
+		else if(selecter == 2 && checkKey(' '))
 		{
 			exit();
 		}

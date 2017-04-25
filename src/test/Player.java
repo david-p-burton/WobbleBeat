@@ -73,5 +73,10 @@ public class Player extends GameObject{
 	{
 		return isDead;
 	}
+	
+	public void setName(String s)
+	{
+		name = s;
+	}
 
 }
