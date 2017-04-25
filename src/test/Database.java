@@ -85,33 +85,18 @@ public class Database {
 			   columnName[i-1] = rsMetaData.getColumnLabel(i);
 			}
 			
-			//display Column names
-			p.textSize(20);
-			p.text("Leaderboard", p.width/2, 50);
-			p.textSize(12);
-			p.text(columnName[0], textX, textY);
-			p.text(columnName[1], textX + textPadding, textY);
-			p.text(columnName[2], textX + (textPadding * 2), textY);
-			
-			
-		
+				
 			//display contents of table
 			while(rs.next())
 			{
 				
-				//starts at 1
-				for(int i = 1; i < numberOfColumns;i++)
-				{
+				String name = rs.getString("PlayerName");
+				int s = rs.getInt("PlayerScore");
+				float t = rs.getFloat("PlayerTime");
+				tempScore = new Score(name,s,t);
 				
-					String name = rs.getString("PlayerName");
-					int s = rs.getInt("PlayerScore");
-					float t = rs.getFloat("PlayerTime");
-					tempScore = new Score(name,s,t);
+				listOfScores.add(tempScore);
 					
-					listOfScores.add(tempScore);
-					
-				}
-				
 			}
 			
 		}			
@@ -167,13 +152,27 @@ public class Database {
 	{
 		displayIndex = 0;
 		int yPadding = 50;
+		
+		//display Column names
+		p.textSize(20);
+		p.text("Leaderboard", p.width/2, 50);
+		p.textSize(12);
+		p.text(columnName[0], textX, textY);
+		p.text(columnName[1], textX + textPadding, textY);
+		p.text(columnName[2], textX + (textPadding * 2), textY);
+		
+		System.out.println(listOfScores.size());
+		
 		while(displayIndex < listOfScores.size())
 		{
 			p.text(listOfScores.get(displayIndex).getPlayerName(), textX, textY + yPadding);
+			p.text(listOfScores.get(displayIndex).getPlayerScore(), textX + 150, textY + yPadding);
+			p.text(listOfScores.get(displayIndex).getTimeLasted(), textX + 300, textY + yPadding);
 			displayIndex++;
 			
 			yPadding += 50;
 		}
+		
 		
 	}
 

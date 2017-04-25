@@ -102,6 +102,7 @@ public class Main extends PApplet {
 	private static int counter;
 	private static int selecter = 1;
 	private static boolean scoreWritten;
+	private static boolean scoresLoaded;
 
 	
 	@SuppressWarnings("deprecation")
@@ -148,9 +149,11 @@ public class Main extends PApplet {
 		gameState = 0;
 		
 		
+		//database stuff
 		db = new Database(this);
-		
+		//ensures scores are written and read only once
 		scoreWritten = false;
+		scoresLoaded = false;
 		
 		
 		
@@ -185,7 +188,7 @@ public class Main extends PApplet {
 		
 		if(gameObjectCount < maxNotes)
 		{
-			Note n = new Note(randPosX, randPosY, 20, 2, this);
+			Note n = new Note(randPosX, randPosY, 20, 1.0f, this);
 			gameObjects.add(n);
 			counter++;
 			gameObjectCount++;
@@ -337,9 +340,16 @@ public class Main extends PApplet {
 			case 4:
 			{
 				
-				
-				db.loadScores();
-				db.printScores();
+				if(!scoresLoaded)
+				{
+					db.loadScores();
+					
+					scoresLoaded = true;
+				}
+				else
+				{
+					db.printScores();
+				}
 				
 				
 				

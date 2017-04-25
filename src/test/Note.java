@@ -27,10 +27,11 @@ public class Note extends GameObject {
 		mousePadding = 20;
 		
 		//this is index for which image to be displayed. Make this bigger if you want more "animation" images
-		animationKey = 1;
-		sprites = new PImage[animationKey];
+		animationKey = 0;
+		sprites = new PImage[2];
 		
 		sprites[0] = p.loadImage("8th Note.png");
+		sprites[1] = p.loadImage("QuarterNote.png");
 		
 		
 	}
@@ -40,9 +41,8 @@ public class Note extends GameObject {
 		//when using any processing code in SEPERATE CLASS FILES. We need to put p.func() to use it
 		p.fill(255);
 		
-		//resize not working
-		sprites[0].resize(200,200);
-		p.image(sprites[0],pos.x,pos.y, size, size);
+		
+		p.image(sprites[animationKey],pos.x,pos.y, size, size);
 	}
 
 	@Override
