@@ -68,7 +68,7 @@ public class Database {
 	public void loadScores()
 	{
 		try(Connection c = DriverManager.getConnection(url,user,password);
-				PreparedStatement ps = c.prepareStatement("select * from scores"))
+				PreparedStatement ps = c.prepareStatement("select * from scores ORDER BY PlayerScore DESC"))
 		{
 			rs = ps.executeQuery();
 			
@@ -157,9 +157,9 @@ public class Database {
 		p.textSize(20);
 		p.text("Leaderboard", p.width/2, 50);
 		p.textSize(12);
-		p.text(columnName[0], textX, textY);
-		p.text(columnName[1], textX + textPadding, textY);
-		p.text(columnName[2], textX + (textPadding * 2), textY);
+		p.text(columnName[1], textX, textY);
+		p.text(columnName[2], textX + textPadding, textY);
+		p.text(columnName[3], textX + (textPadding * 2), textY);
 		
 		System.out.println(listOfScores.size());
 		

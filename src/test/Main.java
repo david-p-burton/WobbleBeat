@@ -25,18 +25,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Random;
 
-import ddf.minim.AudioInput;
 import ddf.minim.AudioPlayer;
-import ddf.minim.AudioSample;
 import ddf.minim.Minim;
-import ddf.minim.analysis.FFT;
-import ddf.minim.effects.LowPassFS;
 import ddf.minim.analysis.BeatDetect;
+import ddf.minim.analysis.FFT;
 import processing.core.PApplet;
 import processing.core.PFont;
 import processing.core.PImage;
-import ddf.minim.effects.*;
-import ddf.minim.ugens.*;
+import controlP5.*;
 
 public class Main extends PApplet {
 
@@ -97,12 +93,14 @@ public class Main extends PApplet {
 	private static float currentTime;
 	private static float noteSpawnTime;
 	private static int maxNotes;
-	//David
+
 	private static float tempoRate;
 	private static int counter;
 	private static int selecter = 1;
 	private static boolean scoreWritten;
 	private static boolean scoresLoaded;
+	private ControlP5 cp5;
+	
 
 	
 	@SuppressWarnings("deprecation")
@@ -138,7 +136,7 @@ public class Main extends PApplet {
 		//beatDetector = new BeatDetector(song,beat, this,300);
 		
 		//init player
-		player = new Player("Ro",10,this);
+		player = new Player("Default",10,this);
 		gameObjects.add(player);
 		
 		
@@ -155,9 +153,31 @@ public class Main extends PApplet {
 		scoreWritten = false;
 		scoresLoaded = false;
 		
+		//for user to enter name
+		 cp5 = new ControlP5(this);
+		 
+   		 
+   			
+   			
+		
 		
 		
 	}//end setup()
+	
+	public void drawCP5Button()
+	{
+		cp5.addTextfield("Player Name").setPosition(WIDTH/3,HEIGHT/2).setSize(200, 40).setFocus(false);
+		 //cp5.setColorForeground(0);
+  		cp5.setColorBackground(125);
+  		
+		
+	}//end drawCP5
+	
+	//when this call it will get the contents of the CP5 box
+	public String submit()
+	{
+		return cp5.get(Textfield.class, "Player Name").getText();
+	}//end submit
 	
 	public void generateNote(int startPos)
 	{
@@ -288,6 +308,7 @@ public class Main extends PApplet {
 				//control instructions object
 				controls = new Instruction(width/2, 150, this, gameText);
 				gameObjects.add(controls);
+				drawCP5Button();
 				
 				gameState = 1;
 				break;
@@ -303,12 +324,16 @@ public class Main extends PApplet {
 			    controls.render();
 			    controls.animate();
 			    selecter();
+			    //set the player name with whatever was typed in the CP5 box
+			    player.setName(submit());
+			    
 				break;
 			}
 			case 2: //game Mode
 			{
 				runGame();
 				processGameObject();
+				cp5.remove("Player Name");
 				
 				break;
 			}
@@ -317,6 +342,7 @@ public class Main extends PApplet {
 				processGameObject();
 				counter = 0;
 				player.reset();
+				cp5.remove("Player Name");
 				
 				//write score only once to database
 				if(!scoreWritten)
@@ -339,7 +365,7 @@ public class Main extends PApplet {
 			}
 			case 4:
 			{
-				
+				cp5.remove("Player Name");
 				if(!scoresLoaded)
 				{
 					db.loadScores();
