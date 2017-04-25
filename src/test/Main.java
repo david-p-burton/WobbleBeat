@@ -19,6 +19,8 @@ import java.sql.SQLException;
  *  3) Need a way for 3 of us to access the same database??
  *  
  *  4)Need to get player to input name 
+ *	5)Powerup to give health and clear screen  
+ *	6)File system
  */
 import java.util.ArrayList;
 import java.util.Random;
@@ -293,7 +295,8 @@ public class Main extends PApplet {
 				textAlign(CENTER, CENTER);
 				textFont(gameText, 20);
 			    text("START", (width / 2), (float)(height * 0.8));
-			    text("EXIT", (width / 2), (float)(height * 0.85));
+			    text("SCORES", (width / 2), (float)(height * 0.85));
+			    text("EXIT", (width / 2), (float)(height * 0.90));
 			    controls.render();
 			    controls.animate();
 			    selecter();
@@ -333,8 +336,13 @@ public class Main extends PApplet {
 			}
 			case 4:
 			{
+				
+				
 				db.loadScores();
 				db.printScores();
+				
+				
+				
 				break;
 			}
 			default: //switch should never get to this state - left blank
@@ -365,33 +373,52 @@ public class Main extends PApplet {
 	
 	public void selecter()
 	{
-		if(checkKey('w'))
-		{
-			selecter = 1;
-			
-		}
-		else if(checkKey('s'))
+		
+		if(checkKey('w'))//play
 		{
 			selecter = 0;
+			
+		}
+		else if(checkKey('s'))//leaderboard
+		{
+			selecter = 1;
 		}
 		
-		if(selecter == 1)
+	
+		else if(checkKey('x'))//exit
 		{
-			image(test, width/3, (float)(height * 0.77) + 5, 30, 30);
+			selecter = 2;
+		    
 		}
+		
+		//draw arrow that moves
 		if(selecter == 0)
 		{
-			image(test, width/3, (float)(height * 0.82) + 5, 30, 30);
+			image(test, width/3 - 10, (float)(height * 0.77) + 5, 30, 30);
+		}
+		if(selecter == 1)
+		{
+			image(test, width/3 - 10, (float)(height * 0.82) + 5, 30, 30);
+		}
+		
+		if(selecter == 2)
+		{
+			image(test, width/3 - 10, (float)(height * 0.87) + 5, 30, 30);
+		}
+		
+		//change game states
+		if(selecter == 1 && checkKey(' '))
+		{
+			gameState = 4;//score board
 		}
 		   
-		
-		if(selecter == 1 && checkKey(' '))
+		//remove arrow objects once game is running
+		if(selecter == 0 && checkKey(' '))
 		{
 			for(int i = 0; i < gameObjects.size();i++)
 			{
 				GameObject o = gameObjects.get(i);
 				
-				//check for note off screen and if clicked, if so remove it
 				if(o instanceof Instruction)
 				{
 					gameObjects.remove(o);
@@ -400,14 +427,10 @@ public class Main extends PApplet {
 
 		    gameState = 2;
 		}
-		//need to be rewritten for menu. Just for testing
-		if(selecter == 1 && checkKey('a'))
-		{
-		    gameState = 4;
-		}
+	
 		
 		
-		else if(selecter == 0 && checkKey(' '))
+		else if(selecter == 2 && checkKey(' '))
 		{
 			exit();
 		}

@@ -10,7 +10,7 @@ public class Instruction extends GameObject
 	private PFont gameText;
 	private float fontSize, increment;
 	private PApplet p;
-	private String words = "W & S to move selection arrow\nClick on the notes to raise score\nDon't let the notes reach the bottom of the page!";
+	private String words = "W: Start, S: Scores, X: Exit, \nClick on the notes to raise score\nDon't let the notes reach the bottom of the page!";
 	
 	Instruction(float x, float y, PApplet p, PFont gameText)
 	{
