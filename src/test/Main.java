@@ -7,18 +7,6 @@ import java.sql.SQLException;
  * menu methods/class (David)
  *  (David)
  *  
- *  1)Too many notes are being generated.Making game impossible
- *  	--Need to imrpove how well they are trigger/detected. Maybe using the Low and high pass filters?
- *  
- *  2)http://stackoverflow.com/questions/2839321/connect-java-to-a-mysql-database 
- *  	--Tutorial on how to connect to a database
- *  	--need to download and put in build path mysql-connector.jar
- *  	--and download https://bitbucket.org/xerial/sqlite-jdbc/downloads/
- *  	--Also you need to provide "root" as user name and "" as password. 
- *  
- *  3) Need a way for 3 of us to access the same database??
- *  
- *  4)Need to get player to input name 
  *	5)Powerup to give health and clear screen  
  *	6)File system
  */
@@ -155,13 +143,7 @@ public class Main extends PApplet {
 		
 		//for user to enter name
 		 cp5 = new ControlP5(this);
-		 
-   		 
-   			
-   			
-		
-		
-		
+
 	}//end setup()
 	
 	public void drawCP5Button()
@@ -321,8 +303,8 @@ public class Main extends PApplet {
 			    text("START", (width / 2), (float)(height * 0.8));
 			    text("SCORES", (width / 2), (float)(height * 0.85));
 			    text("EXIT", (width / 2), (float)(height * 0.90));
-			    controls.render();
-			    controls.animate();
+			    //controls.render();
+			    //controls.animate();
 			    selecter();
 			    //set the player name with whatever was typed in the CP5 box
 			    player.setName(submit());
@@ -377,8 +359,11 @@ public class Main extends PApplet {
 					db.printScores();
 				}
 				
-				
-				
+				if(checkKey('x'))
+				{
+					gameState = 0;
+				}
+
 				break;
 			}
 			default: //switch should never get to this state - left blank

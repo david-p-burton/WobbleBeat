@@ -161,7 +161,7 @@ public class Database {
 		p.text(columnName[2], textX + textPadding, textY);
 		p.text(columnName[3], textX + (textPadding * 2), textY);
 		
-		System.out.println(listOfScores.size());
+		//System.out.println(listOfScores.size());
 		
 		while(displayIndex < listOfScores.size())
 		{
