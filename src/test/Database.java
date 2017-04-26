@@ -164,7 +164,7 @@ public class Database {
 		
 		//System.out.println(listOfScores.size());
 		
-		while(displayIndex < scoresToDisplay)
+		while(displayIndex < listOfScores.size())
 		{
 			p.text(listOfScores.get(displayIndex).getPlayerName(), textX, textY + yPadding);
 			p.text(listOfScores.get(displayIndex).getPlayerScore(), textX + 150, textY + yPadding);
