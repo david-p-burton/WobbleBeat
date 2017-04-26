@@ -4,21 +4,22 @@ import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PVector;
 
-public class Multiplier extends GameObject implements Powerup{
+public class HealthPowerup extends GameObject implements Powerup{
 
 	PApplet p;
 	PImage sprite;
 	
-	public Multiplier(float x, float y, PApplet p)
+	public HealthPowerup(float x, float y, PApplet p)
 	{
 		this.pos = new PVector(x,y);
 		this.p = p;
-		sprite = p.loadImage("Treble.png");
+		//sprite = p.loadImage("Treble.png"); //sort an image out for this
+		
 	}
 	@Override
 	public void applyTo(Player player) {
 		// TODO Auto-generated method stub
-		player.scoreMultiplier();
+		player.increaseHealth();
 	}
 
 	@Override
@@ -31,14 +32,12 @@ public class Multiplier extends GameObject implements Powerup{
 	public void render() {
 		// TODO Auto-generated method stub
 		p.image(sprite, pos.x, pos.y);
-		
 	}
 
 	@Override
 	public void update() {
 		// TODO Auto-generated method stub
 		pos.y = pos.y + 5;
-		
 	}
 
 }

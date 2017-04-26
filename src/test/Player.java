@@ -38,6 +38,11 @@ public class Player extends GameObject{
 		health--;
 	}
 	
+	public void increaseHealth()
+	{
+		health = health + 5;
+	}
+	
 	public int getHealth()
 	{
 		return health;
@@ -46,6 +51,11 @@ public class Player extends GameObject{
 	public void incrementScore()
 	{
 		score++;
+	}
+	
+	public void scoreMultiplier()
+	{
+		score = score + 50;
 	}
 	
 	public void reset()
