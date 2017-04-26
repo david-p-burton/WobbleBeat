@@ -26,7 +26,7 @@ public class Note extends GameObject {
 		this.size = size;
 		this.tempoRate = tempoRate;
 		this.endPoint = endPoint;
-		mousePadding = 20;
+		mousePadding = 40;
 		
 		//this is index for which image to be displayed. Make this bigger if you want more "animation" images
 		animationKey = 0;

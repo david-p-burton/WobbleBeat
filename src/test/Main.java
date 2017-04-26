@@ -197,7 +197,7 @@ public class Main extends PApplet {
 		
 		if(gameObjectCount < maxNotes)
 		{
-			Note n = new Note(randPosX, randPosY, 20, 5.0f, this, endPoint);
+			Note n = new Note(randPosX, randPosY, 20, 3.0f, this, endPoint);
 			gameObjects.add(n);
 			counter++;
 			gameObjectCount++;
@@ -212,7 +212,7 @@ public class Main extends PApplet {
 		//generate powerup at x intervals
 		if(powerupSpawnTime > powerupSpawnRate)
 		{
-			MultiplierPowerup mPow = new MultiplierPowerup(randPosX, randPosY, 5.0f, this, endPoint);
+			MultiplierPowerup mPow = new MultiplierPowerup(randPosX, randPosY, 4.0f, this, endPoint);
 			gameObjects.add(mPow);
 			powerupSpawnTime = 0;
 			
