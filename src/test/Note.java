@@ -48,12 +48,13 @@ public class Note extends GameObject {
 	}
 
 	@Override
-	public void update() {
+	public void update() 
+	{
 		//make it fall. This will be based off of tempo
 		//pos.y += tempoRate;
 	    pos.y += tempoRate;
-	    pos.x = p.lerp(pos.x, endPoint, (0.001f * tempoRate));
-	    size = p.lerp(size, size + 30, (0.001f * tempoRate));
+	    pos.x = p.lerp(pos.x, endPoint, (0.0015f * tempoRate));
+	    size = p.lerp(size, size + 30, (0.002f * tempoRate));
 		
 		
 		
