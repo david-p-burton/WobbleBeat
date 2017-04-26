@@ -167,31 +167,31 @@ public class Main extends PApplet {
 		//Find a better way to limit how many notes are created: Need one note per hit
 		
 		//System.out.println("num of objects: " + gameObjectCount);
-		randPosY = 200;
+		randPosY = 10;
+		float endPoint;
 		//D - make game "fairer" by making notes spawn at fixed locations?
 		//D - placeholder number = 200
 		int guessWork;
-		guessWork = (int)random(1, 5);
+		guessWork = (int)random(1, 4);
 		if(guessWork == 1)
 		{
-			randPosX = WIDTH / 5;
+			randPosX = WIDTH / 4;
+			endPoint = 35;
 		}
 		else if(guessWork == 2)
 		{
-			randPosX = 2 * (WIDTH / 5);
-		}
-		else if (guessWork == 3)
-		{
-			randPosX = 3 * (WIDTH / 5);
+			randPosX = 2 * (WIDTH / 4);
+			endPoint = width/2;
 		}
 		else
 		{
-			randPosX = 4 * (WIDTH / 5);
+			randPosX = 3 * (WIDTH / 4);
+			endPoint = width - 45;
 		}
 		
 		if(gameObjectCount < maxNotes)
 		{
-			Note n = new Note(randPosX, randPosY, 20, 1.0f, this);
+			Note n = new Note(randPosX, randPosY, 20, 5.0f, this, endPoint);
 			gameObjects.add(n);
 			counter++;
 			gameObjectCount++;

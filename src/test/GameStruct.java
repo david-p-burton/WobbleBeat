@@ -23,13 +23,20 @@ public class GameStruct extends GameObject
 	public void lane()
 	{
 		/*
-		 * x * width / 5 = where notes spawn
+		 * x * w / 5 = where notes spawn
 		 */
 		p.fill(255);
+		p.stroke(255);
 		for(int i = 1; i < 5; i++)
 		{
 			p.ellipse((i * w / 5) + 10, 200, 30, 30);
 		}
+		//innerlines
+		p.line(w / 2 - 45, 0, w / 2 - 95, h);
+		p.line(w / 2 + 45, 0, w / 2 + 95, h);
+		//outerlines
+		p.line(w / 2 - 150, 0, 0, h);
+		p.line(w / 2 + 150, 0, w, h);
 	}
 	
 	public void render()
