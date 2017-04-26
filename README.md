@@ -1,4 +1,4 @@
-Wobble Beat!
+<h1>Wobble Beat!</h1>
 
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/aFbuj2brN7U/0.jpg)](https://youtu.be/aFbuj2brN7U)
 
