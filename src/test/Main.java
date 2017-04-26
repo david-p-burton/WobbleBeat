@@ -1,5 +1,8 @@
 package src.test;
+
+import java.io.IOException;
 import java.sql.SQLException;
+
 /*
  * TO DO and NOTES:
  * Need to cap how many notes are generated
@@ -11,15 +14,12 @@ import java.sql.SQLException;
  *	6)File system
  */
 import java.util.ArrayList;
-import java.util.Random;
-
 import ddf.minim.AudioPlayer;
 import ddf.minim.Minim;
 import ddf.minim.analysis.BeatDetect;
 import ddf.minim.analysis.FFT;
 import processing.core.PApplet;
 import processing.core.PFont;
-import processing.core.PImage;
 import controlP5.*;
 
 public class Main extends PApplet {
@@ -28,7 +28,13 @@ public class Main extends PApplet {
 	public static final int HEIGHT = 675;
 	public static boolean running;
 	//variable to determine what should be drawn on screen
-	public int gameState; 
+	private static int gameState; 
+	private static int state;
+	
+	public static void setState(int s)
+	{
+		state = s;
+	}
 	/*Available game states
 	 * 1 = main menu
 	 * 2 = Game mode
@@ -45,6 +51,9 @@ public class Main extends PApplet {
 	BeatDetector snareDetector;
 	BeatDetector hatDetector;
 	BeatDetector beatDetector;
+	
+	//phil
+	private static Chooser arrow;
 
 	private BeatDetect beat;
 	
@@ -55,78 +64,72 @@ public class Main extends PApplet {
 	private static int gameObjectCount;
 	
 	//font
-	PFont gameText;
-	
-	//Arrays
-	boolean[] keyStrokes = new boolean[500];
+	private static PFont gameText;
 	
 	//ArrayLists
 	ArrayList<GameObject> gameObjects;
 	
 	//Objects
 	Note n;
-	Player player;
+	private static Player player;
 	Score score;
-	Instruction controls;
+	private static Instruction controls;
 	Database db;
-	
-	//Images
-	PImage test;
+	MainMenu mMenu;
+	TrackMenu tMenu;
 	
 	//Misc control stuff. Is this a good place to put these variables??
-	private static Random rand = new Random();
+	//private static Random rand = new Random();
 	private static int randPosX;
 	private static int randPosY;
 	private static float timeDelta = 1.0f / 60.0f;
 	private static float currentTime;
-	private static float noteSpawnTime;
+	//private static float noteSpawnTime;
 	private static int maxNotes;
 
-	private static float tempoRate;
+	//private static float tempoRate;
 	private static int counter;
-	private static int selecter = 1;
+	private static int selecter;
+	private static int trackSelect;
 	private static boolean scoreWritten;
 	private static boolean scoresLoaded;
-	private ControlP5 cp5;
+	private static boolean trackSelected;
+	private static boolean inTMenu;
+	private static ControlP5 cp5;
 	
-
+	public static ControlP5 getCp5()
+	{
+		return cp5;
+	}
 	
-	@SuppressWarnings("deprecation")
 	public void setup()
 	{
 		gameObjects = new ArrayList<GameObject>();
-		
+		selecter = 1;
+		trackSelect = 0;
+		trackSelected = false;
+		inTMenu = false;
 		minim = new Minim(this);
-		
-		//two different tracks to test, one with just drums one dense metal mix
-		song = minim.loadFile("Rock drum loop 1 (160 bpm).mp3", FRAME_SIZE);
 		
 		//song = minim.loadFile("Scarlett.mp3", FRAME_SIZE);	
 		
 		//game font
 		gameText = createFont("data/game.ttf", 30, true);
 		
-		//Images
-		test = loadImage("data/musicNote.png");
+		arrow = new Chooser(this);
 		
-		//song.play();  - moved to gameState 2 for testing
-		fft = new FFT(song.bufferSize(),song.sampleRate());
-		//beat = new BeatDetect();//sound energy mode
-		beat = new BeatDetect(song.bufferSize(), song.sampleRate());//Freq mode
-		
-		//this requires some tweaking to get it to trigger properly
-		//the last parameter is the sensitivity. 
-		//It seems to work best, if using multiple beatDetectors to have it set to zero
-		//if using one to check for each beat.it can be adjusted. This seems to depend on song tempo.
-		kickDetector = new BeatDetector(song,beat,this,10);
-		//snareDetector = new BeatDetector(song, beat, this,0);
-		//hatDetector = new BeatDetector(song, beat, this,0);
-		//beatDetector = new BeatDetector(song,beat, this,300);
 		
 		//init player
-		player = new Player("Default",10,this);
+		player = new Player("Default",10);
 		gameObjects.add(player);
-		
+
+		mMenu = new MainMenu(this, player);
+		try {
+			tMenu = new TrackMenu(this);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		gameObjectCount = 0;
 		maxNotes = 1;//max notes per second
@@ -156,7 +159,7 @@ public class Main extends PApplet {
 	}//end drawCP5
 	
 	//when this call it will get the contents of the CP5 box
-	public String submit()
+	public static String submit()
 	{
 		return cp5.get(Textfield.class, "Player Name").getText();
 	}//end submit
@@ -284,58 +287,46 @@ public class Main extends PApplet {
 		{
 			case 0: //spare
 			{
-				player.isDead = false;
-				scoreWritten = false;//reset this so game can be played again and new score written
-				
-				//control instructions object
-				controls = new Instruction(width/2, 150, this, gameText);
-				gameObjects.add(controls);
-				drawCP5Button();
-				
-				gameState = 1;
+				resetGame();
 				break;
 			}
 			case 1: //game menu
 			{
-				
-				//TODO send to seperate class
-				scoreWritten = false;
-				textAlign(CENTER, CENTER);
-				textFont(gameText, 20);
-			    text("START", (width / 2), (float)(height * 0.8));
-			    text("SCORES", (width / 2), (float)(height * 0.85));
-			    text("EXIT", (width / 2), (float)(height * 0.90));
-			    controls.render();
-			    controls.animate();
-			    selecter();
+				inTMenu = false;
+			    mMenu.render(selecter);
 			    //set the player name with whatever was typed in the CP5 box
 			    player.setName(submit());
-			    
 				break;
 			}
 			case 2: //game Mode
 			{
-				runGame();
-				processGameObject();
-
-				cp5.remove("Player Name");
-				
-				for(int i = 0; i < gameObjects.size();i++)
+				inTMenu = false;
+				if(trackSelected)
 				{
-					GameObject o = gameObjects.get(i);
+					runGame();
+					processGameObject();
+	
+					cp5.remove("Player Name");
 					
-					if(o instanceof Instruction)
+					for(int i = 0; i < gameObjects.size();i++)
 					{
-						gameObjects.remove(o);
+						GameObject o = gameObjects.get(i);
+						
+						if(o instanceof Instruction)
+						{
+							gameObjects.remove(o);
+						}
 					}
 				}
-
-
-				
+				else
+				{
+					gameState = 1;
+				}
 				break;
 			}
 			case 3: //game Over
 			{
+				inTMenu = false;
 				processGameObject();
 				counter = 0;
 				player.reset();
@@ -348,7 +339,6 @@ public class Main extends PApplet {
 						db.writeScore(score);
 						scoreWritten = true;
 					} catch (SQLException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -362,6 +352,13 @@ public class Main extends PApplet {
 			}
 			case 4:
 			{
+				tMenu.render();
+				cp5.remove("Player Name");
+				break;
+			}
+			case 5:
+			{
+				inTMenu = false;
 				cp5.remove("Player Name");
 				text("Press x to go back", (width / 2), (float)(height * 0.85));
 				if(!scoresLoaded)
@@ -374,13 +371,11 @@ public class Main extends PApplet {
 				{
 					db.printScores();
 				}
-				
-				if(checkKey('x'))
-				{
-					gameState = 0;
-				}
-
 				break;
+			}
+			case 6:
+			{
+				exit();
 			}
 			default: //switch should never get to this state - left blank
 			{
@@ -388,6 +383,20 @@ public class Main extends PApplet {
 			}
 		}
 	}//end draw()
+	
+	public void resetGame()
+	{
+		inTMenu = false;
+		player.isDead = false;
+		drawCP5Button();
+		scoreWritten = false;//reset this so game can be played again and new score written
+		
+		//control instructions object
+		controls = new Instruction(width/2, 150, this, gameText);
+		gameObjects.add(controls);
+		
+		gameState = 1;
+	}
 	
 	public void runGame()
 	{
@@ -408,70 +417,6 @@ public class Main extends PApplet {
 		
 	}//end game
 	
-	public void selecter()
-	{
-		
-		if(checkKey('w'))//play
-		{
-			selecter = 0;
-			
-		}
-		else if(checkKey('s'))//leaderboard
-		{
-			selecter = 1;
-		}
-		
-	
-		else if(checkKey('x'))//exit
-		{
-			selecter = 2;
-		    
-		}
-		
-		//draw arrow that moves
-		if(selecter == 0)
-		{
-			image(test, width/3 - 10, (float)(height * 0.77) + 5, 30, 30);
-		}
-		if(selecter == 1)
-		{
-			image(test, width/3 - 10, (float)(height * 0.82) + 5, 30, 30);
-		}
-		
-		if(selecter == 2)
-		{
-			image(test, width/3 - 10, (float)(height * 0.87) + 5, 30, 30);
-		}
-		
-		//change game states
-		if(selecter == 1 && checkKey(' '))
-		{
-			gameState = 4;//score board
-		}
-		   
-		//remove arrow objects once game is running
-		if(selecter == 0 && checkKey(' '))
-		{
-			for(int i = 0; i < gameObjects.size();i++)
-			{
-				GameObject o = gameObjects.get(i);
-				
-				if(o instanceof Instruction)
-				{
-					gameObjects.remove(o);
-				}
-			}
-
-		    gameState = 2;
-		}
-	
-		
-		
-		else if(selecter == 2 && checkKey(' '))
-		{
-			exit();
-		}
-	}
 	
 	public void stats()
 	{
@@ -489,7 +434,6 @@ public class Main extends PApplet {
 			db.closeConnection();
 			super.stop();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -506,23 +450,159 @@ public class Main extends PApplet {
         PApplet.runSketch( a, new Main());
 	}
 	
+	
 	//Methods for registering keystrokes
 	public void keyPressed()
+	{	
+		if(keyCode == UP)
+		{
+			if(gameState == 1)
+			{
+				if(selecter == 0) {
+					selecter = 3;
+				}
+				else {
+					selecter--;
+				}
+			}
+			
+			if(gameState == 4)
+			{
+				if(trackSelect == 0)
+				{
+					trackSelect = tMenu.numTracks()-1;
+				}
+				else
+				{
+					trackSelect--;
+				}
+			}
+		}
+		
+		if(keyCode == DOWN)
+		{
+			if(gameState == 1)
+			{
+				if(selecter == 3) {
+					selecter = 0;
+				}
+				else {
+					selecter++;
+				}
+			}
+			
+			if(gameState == 4)
+			{
+				if(trackSelect == tMenu.numTracks()-1)
+				{
+					trackSelect = 0;
+				}
+				else
+				{
+					trackSelect++;
+				}
+			}
+		}
+		
+		if(key == 10)//if return key
+		{
+			if(state == 2)
+			{
+				for(int i = 0; i < gameObjects.size();i++)
+				{
+					GameObject o = gameObjects.get(i);
+					
+					if(o instanceof Instruction)
+					{
+						gameObjects.remove(o);
+					}
+				}//end for
+			}//end if state == 2
+			
+			if(state == 4 && inTMenu)
+			{
+				song = minim.loadFile(tMenu.getTPaths().get(trackSelect), FRAME_SIZE);
+				//song.play();  - moved to gameState 2 for testing
+				fft = new FFT(song.bufferSize(),song.sampleRate());
+				//beat = new BeatDetect();//sound energy mode
+				beat = new BeatDetect(song.bufferSize(), song.sampleRate());//Freq mode
+				//this requires some tweaking to get it to trigger properly
+				//the last parameter is the sensitivity. 
+				//It seems to work best, if using multiple beatDetectors to have it set to zero
+				//if using one to check for each beat.it can be adjusted. This seems to depend on song tempo.
+				kickDetector = new BeatDetector(song,beat,this,10);
+				//snareDetector = new BeatDetector(song, beat, this,0);
+				//hatDetector = new BeatDetector(song, beat, this,0);
+				//beatDetector = new BeatDetector(song,beat, this,300);
+				state = 0;
+				trackSelected = true;
+			}
+			
+			gameState = state;
+		}//end if return key
+		
+		if(key == 'x')
+		{
+			if(gameState == 4 || gameState == 5)//if @ track select or score screen
+			{
+				gameState = 0;//reset and go back to main menu
+			}
+		}
+	}
+	
+	public static boolean setInTMenu(boolean s)
 	{
-	  keyStrokes[keyCode] = true;
+		return inTMenu = s;
+	}
+	
+	public static int getSelecter()
+	{
+		return selecter;
+	}
+	
+	public static int getTrackSelect()
+	{
+		return trackSelect;
+	}
+	
+	public static void setTrackSelect(int t)
+	{
+		trackSelect = t;
+	}
+	
+	public static boolean getScoreWritten()
+	{
+		return scoreWritten;
+	}
+	
+	public static void setScoreWritten(boolean scoreW)
+	{
+		scoreWritten = scoreW;
+	}
+	
+	public static PFont getGameText()
+	{
+		return gameText;
+	}
+	
+	public static int getState()
+	{
+		return state;
+	}
+	
+	public static Player getPlayer()
+	{
+		return player;
+	}
+	
+	public static Instruction getControls()
+	{
+		return controls;
+	}
+	
+	public static Chooser getArrow()
+	{
+		return arrow;
 	}
 
-	public void keyReleased()
-	{
-	  keyStrokes[keyCode] = false;
-	}
-
-	public boolean checkKey(int a)
-	{
-	  if(keyStrokes.length >= a)
-	  {
-	    return keyStrokes[a] || keyStrokes[Character.toUpperCase(a)];
-	  }
-	  return false;
-	}
 }

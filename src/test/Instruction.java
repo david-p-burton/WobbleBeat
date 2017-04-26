@@ -1,6 +1,7 @@
 package src.test;
 
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.core.PFont;
 import processing.core.PVector;
 
@@ -24,15 +25,13 @@ public class Instruction extends GameObject
 	
 	public void render()
 	{
-		p.textAlign(p.CENTER, p.CENTER);
+		p.textAlign(PConstants.CENTER, PConstants.CENTER);
 		p.textFont(gameText, fontSize);
-		System.out.println(fontSize);
 		rotating();
 	}
 	
 	public void animate()
 	{
-		//fontSize = p.lerp((float)8, (float)16, (float)0.1);
 		if(fontSize < 7 || fontSize > 10)
 		{
 			increment *= -1;
@@ -40,22 +39,23 @@ public class Instruction extends GameObject
 	
 		if(increment > 0)
 		{
-			fontSize = p.lerp(fontSize, 11, 0.008f);
+			fontSize = PApplet.lerp(fontSize, 11, 0.008f);
 		}
 		else
 		{
-			fontSize = p.lerp(fontSize, 6, 0.008f);
+			fontSize = PApplet.lerp(fontSize, 6, 0.008f);
 		}
 		
 		if(fontSize <= 7.5 || fontSize >= 9)
 		{
-			rNumber = p.lerp(rNumber, -PI/6, 0.01f);
+			rNumber = PApplet.lerp(rNumber, -PI/6, 0.01f);
 		}
 		else
 		{
-			rNumber = p.lerp(rNumber, PI/6, 0.01f);
+			rNumber = PApplet.lerp(rNumber, PI/6, 0.01f);
 		}
 	}
+	
 	
 	public void rotating()
 	{
@@ -67,6 +67,8 @@ public class Instruction extends GameObject
 	
 		p.popMatrix();
 	}
+	
+	
 	public void update()
 	{
 		

@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.mysql.jdbc.ResultSetMetaData;
-import com.mysql.jdbc.Statement;
 
 import processing.core.PApplet;
 
@@ -152,7 +151,6 @@ public class Database {
 	{
 		displayIndex = 0;
 		int yPadding = 50;
-		int scoresToDisplay = 8;
 		
 		//display Column names
 		p.textSize(20);
@@ -164,7 +162,7 @@ public class Database {
 		
 		//System.out.println(listOfScores.size());
 		
-		while(displayIndex < scoresToDisplay)
+		while(displayIndex < 8)
 		{
 			p.text(listOfScores.get(displayIndex).getPlayerName(), textX, textY + yPadding);
 			p.text(listOfScores.get(displayIndex).getPlayerScore(), textX + 150, textY + yPadding);

@@ -1,6 +1,5 @@
 package src.test;
 
-import processing.core.PApplet;
 
 public class Player extends GameObject{
 	
@@ -9,13 +8,11 @@ public class Player extends GameObject{
 	private int health;
 	public boolean isDead;
 	private int score;
-	private PApplet p;
 	
-	public Player(String name, int health, PApplet p)
+	public Player(String name, int health)
 	{
 		this.name = name;
 		this.health = health;
-		this.p = p;
 		score = 0;
 	}
 	

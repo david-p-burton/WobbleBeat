@@ -1,14 +1,9 @@
 package src.test;
 
 import ddf.minim.AudioListener;
-import ddf.minim.AudioOutput;
 import ddf.minim.AudioPlayer;
-import ddf.minim.Minim;
-import ddf.minim.UGen;
 import ddf.minim.analysis.BeatDetect;
 import processing.core.PApplet;
-import ddf.minim.effects.*;
-import ddf.minim.ugens.*;
 
 public class BeatDetector implements AudioListener{
 	
@@ -21,17 +16,14 @@ public class BeatDetector implements AudioListener{
 	private int sensitivity;
 	
 	//filters
-	private LowPassFS  lpf;
-	private HighPassSP hpf;
 	
 	//temporary
 	private float radius;//temporary
 	private float kickPos;
 	private float snrPos;
-	private float hatPos;
 	
 	
-	@SuppressWarnings("deprecation")
+	
 	public BeatDetector(AudioPlayer song,BeatDetect beat, PApplet p, int sensitivity)
 	{
 		this.song = song;
@@ -43,7 +35,6 @@ public class BeatDetector implements AudioListener{
 		
 		kickPos = 100;
 		snrPos = 300;
-		hatPos = 200;
 		
 		//50ms to 75ms seems to work for kick/snare individually,NOT togehter 0 seems to be a close as it can go
 		beat.setSensitivity(sensitivity);//wait Xms before another beat detected
@@ -52,8 +43,6 @@ public class BeatDetector implements AudioListener{
 		beat.detectMode(0);//(0) = freqeuncey mode (1) = soundEnergy mode
 		
 		
-		lpf = new LowPassFS(1000, song.sampleRate());
-		hpf = new HighPassSP(500, song.sampleRate());
 		
 		//song.addEffect(lpf);
 		//ong.addEffect(hpf);
@@ -125,7 +114,7 @@ public class BeatDetector implements AudioListener{
 		beat.detect(song.mix);
 		boolean b = false;
 		
-		for(int i = 0; i < beat.detectSize(); ++i)
+		for(int i = 0; i < beat.dectectSize(); ++i)
 		  {
 		    // test one frequency band for an onset
 		    if ( beat.isOnset(i) )

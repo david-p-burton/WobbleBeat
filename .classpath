@@ -2,15 +2,16 @@
 <classpath>
 	<classpathentry kind="src" path=""/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/Users/Ronan/Documents/Processing/libraries/controlP5/library/controlP5.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ronan/Documents/Processing/libraries/minim/library/jl1.0.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ronan/Documents/Processing/libraries/minim/library/jsminim.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ronan/Documents/Processing/libraries/minim/library/minim.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ronan/Documents/Processing/libraries/minim/library/mp3spi1.9.5.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ronan/Documents/Processing/libraries/minim/library/tritonus_aos.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ronan/Documents/Processing/libraries/minim/library/tritonus_share.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ronan/Documents/processing-3.2.3-windows64/processing-3.2.3/core/library/core.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ronan/Documents/sqlite-jdbc-3.15.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Ronan/Documents/mysql-connector-java-5.1.41/mysql-connector-java-5.1.41/mysql-connector-java-5.1.41-bin.jar"/>
+	<classpathentry kind="lib" path="controlP5.jar"/>
+	<classpathentry kind="lib" path="core.jar"/>
+	<classpathentry kind="lib" path="jid3lib-0.6-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="jsminim.jar"/>
+	<classpathentry kind="lib" path="mp3spi1.9.4.jar"/>
+	<classpathentry kind="lib" path="mysql-connector-java-5.1.41-bin.jar"/>
+	<classpathentry kind="lib" path="sqlite-jdbc-3.15.1.jar"/>
+	<classpathentry kind="lib" path="tritonus_aos.jar"/>
+	<classpathentry kind="lib" path="tritonus_share.jar"/>
+	<classpathentry kind="lib" path="minim.jar"/>
+	<classpathentry kind="lib" path="jl1.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
