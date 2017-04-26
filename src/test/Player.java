@@ -48,6 +48,11 @@ public class Player extends GameObject{
 		score++;
 	}
 	
+	public void incrementScoreWithMultiplier()
+	{
+		score = score + 50;
+	}
+	
 	public void reset()
 	{
 		score = 0;

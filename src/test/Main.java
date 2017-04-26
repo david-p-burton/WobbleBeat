@@ -79,7 +79,10 @@ public class Main extends PApplet {
 	private static int randPosY;
 	private static float timeDelta = 1.0f / 60.0f;
 	private static float currentTime;
-	private static float noteSpawnTime;
+	
+	private static float powerupSpawnRate;
+	private static float powerupSpawnTime = 1.0f / powerupSpawnRate;
+	
 	private static int maxNotes;
 
 	private static float tempoRate;
@@ -143,13 +146,14 @@ public class Main extends PApplet {
 		
 		//for user to enter name
 		 cp5 = new ControlP5(this);
+		 
+		
 
 	}//end setup()
 	
 	public void drawCP5Button()
 	{
 		cp5.addTextfield("Player Name").setPosition(WIDTH/3,HEIGHT/2).setSize(200, 40).setFocus(false);
-		 //cp5.setColorForeground(0);
   		cp5.setColorBackground(125);
   		
 		
@@ -200,6 +204,8 @@ public class Main extends PApplet {
 			gameObjectCount = 0;
 		}
 		
+		
+		
 	}//end generateNote()
 	
 	public void processGameObject()
@@ -219,7 +225,7 @@ public class Main extends PApplet {
 			score = new Score(p.getName(),p.getScore(),currentTime);
 			
 			
-			//db.loadScores();
+			
 			
 			//remove everything bar player
 			for(int i = gameObjects.size() - 1; i >= 1; i--)
@@ -240,6 +246,7 @@ public class Main extends PApplet {
 			
 			//get game object and check if it is a note
 			GameObject o = gameObjects.get(i);
+			
 			
 			//check for note off screen and if clicked, if so remove it
 			if(o instanceof Note)
@@ -262,7 +269,35 @@ public class Main extends PApplet {
 					gameObjects.remove(n);
 				}
 			}
-		}
+			
+			
+		}//end for
+		
+		//check for power up. I think unless you do this separate to the one above it will cause problems
+		//if notes and power ups overlap each other
+		for(int i = 0; i < gameObjects.size();i++)
+		{
+			GameObject o = gameObjects.get(i);
+			
+			if(o instanceof MultiplierPowerup)
+			{
+				MultiplierPowerup m = (MultiplierPowerup)o;
+				//check if note is clicked
+				
+				if(m.isClicked())
+				{
+					m.applyTo(player);
+					gameObjects.remove(m);
+
+				}
+		
+				if(m.getY() > HEIGHT)
+				{
+					
+					gameObjects.remove(m);
+				}
+			}
+		}//end for
 	
 	}//end processGameObject()
 	
@@ -316,6 +351,7 @@ public class Main extends PApplet {
 			case 2: //game Mode
 			{
 				runGame();
+				generatePowerUps();
 				processGameObject();
 
 				cp5.remove("Player Name");
@@ -396,6 +432,7 @@ public class Main extends PApplet {
 		{
 			song.play();
 			currentTime += timeDelta;
+			powerupSpawnTime += timeDelta;
 			
 			if(kickDetector.detectKick() && counter < 20)
 			{
@@ -497,6 +534,20 @@ public class Main extends PApplet {
 	public void mouseClicked()
 	{
 		
+	}
+	
+	public void generatePowerUps()
+	{
+		
+		powerupSpawnRate = 20;//every 20 seconds
+		//generate powerup at x intervals
+		if(powerupSpawnTime > powerupSpawnRate)
+		{
+			MultiplierPowerup mPow = new MultiplierPowerup(random(0,WIDTH), 0, this);
+			gameObjects.add(mPow);
+			powerupSpawnTime = 0;
+			
+		}
 	}
 	
 	public static void main(String[] args)

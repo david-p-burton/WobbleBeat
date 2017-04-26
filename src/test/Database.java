@@ -50,7 +50,7 @@ public class Database {
 		textX = 100;
 		textY = 100;
 		textPadding = 150;
-		displayIndex = 1;
+		//displayIndex = 1;
 		listOfScores = new ArrayList<Score>();
 		
 		
@@ -164,7 +164,8 @@ public class Database {
 		
 		//System.out.println(listOfScores.size());
 		
-		while(displayIndex < scoresToDisplay)
+		//while(displayIndex < scoresToDisplay)) //BUG!!! if less than 8 scores in DB it crashes
+		while(displayIndex < listOfScores.size())
 		{
 			p.text(listOfScores.get(displayIndex).getPlayerName(), textX, textY + yPadding);
 			p.text(listOfScores.get(displayIndex).getPlayerScore(), textX + 150, textY + yPadding);

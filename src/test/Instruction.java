@@ -26,7 +26,7 @@ public class Instruction extends GameObject
 	{
 		p.textAlign(p.CENTER, p.CENTER);
 		p.textFont(gameText, fontSize);
-		System.out.println(fontSize);
+		//System.out.println(fontSize);
 		rotating();
 	}
 	
