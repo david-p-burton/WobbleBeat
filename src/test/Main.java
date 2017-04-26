@@ -9,6 +9,7 @@ import java.sql.SQLException;
  *  
  *	5)Powerup to give health and clear screen  
  *	6)File system
+ *TEST
  */
 import java.util.ArrayList;
 import java.util.Random;
