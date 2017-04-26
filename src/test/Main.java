@@ -56,6 +56,7 @@ public class Main extends PApplet {
 	
 	//font
 	PFont gameText;
+	PFont title;
 	
 	//Arrays
 	boolean[] keyStrokes = new boolean[500];
@@ -109,6 +110,7 @@ public class Main extends PApplet {
 		
 		//game font
 		gameText = createFont("data/game.ttf", 30, true);
+		title = createFont("data/title.ttf", 30, true);
 		
 		//Images
 		test = loadImage("data/musicNote.png");
@@ -171,31 +173,31 @@ public class Main extends PApplet {
 		//Find a better way to limit how many notes are created: Need one note per hit
 		
 		//System.out.println("num of objects: " + gameObjectCount);
-		randPosY = 200;
+		randPosY = 10;
+		float endPoint;
 		//D - make game "fairer" by making notes spawn at fixed locations?
 		//D - placeholder number = 200
 		int guessWork;
-		guessWork = (int)random(1, 5);
+		guessWork = (int)random(1, 4);
 		if(guessWork == 1)
 		{
-			randPosX = WIDTH / 5;
+			randPosX = WIDTH / 4 + 10;
+			endPoint = 5;
 		}
 		else if(guessWork == 2)
 		{
-			randPosX = 2 * (WIDTH / 5);
-		}
-		else if (guessWork == 3)
-		{
-			randPosX = 3 * (WIDTH / 5);
+			randPosX = (WIDTH / 2) - 8;
+			endPoint = width/2 - 15;
 		}
 		else
 		{
-			randPosX = 4 * (WIDTH / 5);
+			randPosX = 3 * (WIDTH / 4) - 30;
+			endPoint = width - 47;
 		}
 		
 		if(gameObjectCount < maxNotes)
 		{
-			Note n = new Note(randPosX, randPosY, 20, 1.0f, this);
+			Note n = new Note(randPosX, randPosY, 20, 5.0f, this, endPoint);
 			gameObjects.add(n);
 			counter++;
 			gameObjectCount++;
@@ -324,7 +326,7 @@ public class Main extends PApplet {
 				scoreWritten = false;//reset this so game can be played again and new score written
 				
 				//control instructions object
-				controls = new Instruction(width/2, 150, this, gameText);
+				controls = new Instruction(width/2, 100, this, gameText);
 				gameObjects.add(controls);
 				drawCP5Button();
 				
@@ -346,6 +348,18 @@ public class Main extends PApplet {
 			    selecter();
 			    //set the player name with whatever was typed in the CP5 box
 			    player.setName(submit());
+			    
+			    pushMatrix();
+			    	textFont(title, 80);
+				    translate(50, height/2 + 40);
+				    rotate(-HALF_PI);
+				    text("WOBBLE",0,0);
+			    popMatrix();
+			    pushMatrix();
+				    translate(width - 50, height/2 + 40);
+				    rotate(HALF_PI);
+				    text("BEAT!", 0, 0);
+				popMatrix();
 			    
 				break;
 			}
@@ -419,6 +433,7 @@ public class Main extends PApplet {
 				}
 				else
 				{
+					textFont(gameText, 10);
 					db.printScores();
 				}
 				
@@ -431,7 +446,7 @@ public class Main extends PApplet {
 			}
 			case 5:
 			{
-				gameStruct = new GameStruct(width, height, this);
+				gameStruct = new GameStruct(width, height, this, gameObjects);
 				gameObjects.add(gameStruct);
 				gameState = 2;
 			}

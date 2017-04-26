@@ -14,9 +14,10 @@ public class Note extends GameObject {
 	private boolean overNote;
 	//variable for moving the note according to tempo
 	public float tempoRate;
+	private float endPoint;
 	
 	
-	public Note(float x, float y, float size, float tempoRate, PApplet p)
+	public Note(float x, float y, float size, float tempoRate, PApplet p, float endPoint)
 	{
 		//you can only have one class extend PApplet, the main class so we have to pass it to all other classes
 		//so we can use the processing shapes and images etc
@@ -24,6 +25,7 @@ public class Note extends GameObject {
 		pos = new PVector(x,y);
 		this.size = size;
 		this.tempoRate = tempoRate;
+		this.endPoint = endPoint;
 		mousePadding = 20;
 		
 		//this is index for which image to be displayed. Make this bigger if you want more "animation" images
@@ -46,9 +48,13 @@ public class Note extends GameObject {
 	}
 
 	@Override
-	public void update() {
+	public void update() 
+	{
 		//make it fall. This will be based off of tempo
-		pos.y += tempoRate;
+		//pos.y += tempoRate;
+	    pos.y += tempoRate;
+	    pos.x = p.lerp(pos.x, endPoint, (0.0015f * tempoRate));
+	    size = p.lerp(size, size + 30, (0.002f * tempoRate));
 		
 		
 		
