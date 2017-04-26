@@ -208,6 +208,18 @@ public class Main extends PApplet {
 		}
 		
 		
+		powerupSpawnRate = 20;//every 20 seconds
+		//generate powerup at x intervals
+		if(powerupSpawnTime > powerupSpawnRate)
+		{
+			MultiplierPowerup mPow = new MultiplierPowerup(randPosX, randPosY, 5.0f, this, endPoint);
+			gameObjects.add(mPow);
+			powerupSpawnTime = 0;
+			
+		}
+		
+		
+		
 		
 	}//end generateNote()
 	
@@ -366,7 +378,7 @@ public class Main extends PApplet {
 			case 2: //game Mode
 			{
 				runGame();
-				generatePowerUps();
+				
 				processGameObject();
 
 				cp5.remove("Player Name");
@@ -568,19 +580,7 @@ public class Main extends PApplet {
 		
 	}
 	
-	public void generatePowerUps()
-	{
-		
-		powerupSpawnRate = 20;//every 20 seconds
-		//generate powerup at x intervals
-		if(powerupSpawnTime > powerupSpawnRate)
-		{
-			MultiplierPowerup mPow = new MultiplierPowerup(random(0,WIDTH), 0, this);
-			gameObjects.add(mPow);
-			powerupSpawnTime = 0;
-			
-		}
-	}
+	
 	
 	public static void main(String[] args)
 	{

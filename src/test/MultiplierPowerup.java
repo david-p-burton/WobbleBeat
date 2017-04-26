@@ -8,15 +8,19 @@ public class MultiplierPowerup extends GameObject implements Powerup{
 
 	private PApplet p;
 	PImage sprite;
+	public float tempoRate;
+	private float endPoint;
 	
 	private int mousePadding;//used for offset for click
 	private boolean overPowerup;
 	
-	public MultiplierPowerup(float x, float y, PApplet p)
+	public MultiplierPowerup(float x, float y, float tempoRate, PApplet p, float endPoint)
 	{
 		this.pos = new PVector(x,y);
 		this.p = p;
 		this.sprite = p.loadImage("Treble.png");
+		this.tempoRate = tempoRate;
+		this.endPoint = endPoint;
 		mousePadding = 50;
 	}
 	
@@ -42,7 +46,9 @@ public class MultiplierPowerup extends GameObject implements Powerup{
 	@Override
 	public void update() {
 		// TODO Auto-generated method stub
-		pos.y += 8;
+		pos.y += tempoRate;
+	    pos.x = p.lerp(pos.x, endPoint, (0.0015f * tempoRate));
+	    size = p.lerp(size, size + 30, (0.002f * tempoRate));
 	}
 	
 	public boolean isClicked()
