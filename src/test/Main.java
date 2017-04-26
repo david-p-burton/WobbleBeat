@@ -69,6 +69,7 @@ public class Main extends PApplet {
 	Score score;
 	Instruction controls;
 	Database db;
+	GameStruct gameStruct;
 	
 	//Images
 	PImage test;
@@ -372,6 +373,16 @@ public class Main extends PApplet {
 			}
 			case 3: //game Over
 			{
+				for(int i = 0; i < gameObjects.size();i++)
+				{
+					GameObject o = gameObjects.get(i);
+					
+					if(o instanceof GameStruct)
+					{
+						gameObjects.remove(o);
+					}
+				}
+				
 				processGameObject();
 				counter = 0;
 				player.reset();
@@ -417,6 +428,12 @@ public class Main extends PApplet {
 				}
 
 				break;
+			}
+			case 5:
+			{
+				gameStruct = new GameStruct(width, height, this);
+				gameObjects.add(gameStruct);
+				gameState = 2;
 			}
 			default: //switch should never get to this state - left blank
 			{
@@ -499,7 +516,7 @@ public class Main extends PApplet {
 				}
 			}
 
-		    gameState = 2;
+		    gameState = 5;
 		}
 	
 		
