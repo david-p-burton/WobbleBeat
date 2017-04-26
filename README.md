@@ -27,7 +27,9 @@ This project takes advantage of many Object Orientated concepts. Most of the gam
 There are also many other things going on behind the scenes such as database score recording, note detection using fast-Fourier Transforms and keeping track of game state variables to ensure the program is animating the correct thing at the correct time.
 
 <h2>Things to Note</h2>
+
 David; My favourite part of the project was getting the animation as well as the UI working. In particular, I liked the instructions and the way they are animated to twist and zoom in and out. Also, during this project I finally understood how the Lerp function worked and put it to use in the way the notes during gameplay will get bigger as they move towards the bottom of the screen.
+
 
 Ronan; I really enjoyed learning how to integrate Java and MySQL together to form a database of scores. This project also allowed me to learn much more about Eclipse as an IDE and about Git and how to use it effectively as part of a team.
 
