@@ -30,11 +30,12 @@ public class Main extends PApplet {
 	//variable to determine what should be drawn on screen
 	public int gameState; 
 	/*Available game states
+	 * 0 = Setting up some variables at the start of program and also after game over screen
 	 * 1 = main menu
 	 * 2 = Game mode
 	 * 3 = Game over screen
-	 * 4 = 
-	 * 
+	 * 4 = Score Screen
+	 * 5 =  Interstitial screen setting up game for game State 2
 	 */
 	
 	//Audio stuff
@@ -105,8 +106,8 @@ public class Main extends PApplet {
 		
 		//two different tracks to test, one with just drums one dense metal mix
 		song = minim.loadFile("Rock drum loop 1 (160 bpm).mp3", FRAME_SIZE);
-		
-		//song = minim.loadFile("Scarlett.mp3", FRAME_SIZE);	
+		//song = minim.loadFile("another one bites the dust.mp3", FRAME_SIZE);
+		//song = minim.loadFile("Africa.mp3", FRAME_SIZE);
 		
 		//game font
 		gameText = createFont("data/game.ttf", 30, true);
@@ -115,9 +116,7 @@ public class Main extends PApplet {
 		//Images
 		test = loadImage("data/musicNote.png");
 		
-		//song.play();  - moved to gameState 2 for testing
 		fft = new FFT(song.bufferSize(),song.sampleRate());
-		//beat = new BeatDetect();//sound energy mode
 		beat = new BeatDetect(song.bufferSize(), song.sampleRate());//Freq mode
 		
 		//this requires some tweaking to get it to trigger properly
@@ -125,9 +124,6 @@ public class Main extends PApplet {
 		//It seems to work best, if using multiple beatDetectors to have it set to zero
 		//if using one to check for each beat.it can be adjusted. This seems to depend on song tempo.
 		kickDetector = new BeatDetector(song,beat,this,10);
-		//snareDetector = new BeatDetector(song, beat, this,0);
-		//hatDetector = new BeatDetector(song, beat, this,0);
-		//beatDetector = new BeatDetector(song,beat, this,300);
 		
 		//init player
 		player = new Player("Default",10,this);
@@ -143,15 +139,13 @@ public class Main extends PApplet {
 		
 		//database stuff
 		db = new Database(this);
+		
 		//ensures scores are written and read only once
 		scoreWritten = false;
 		scoresLoaded = false;
 		
 		//for user to enter name
 		 cp5 = new ControlP5(this);
-		 
-		
-
 	}//end setup()
 	
 	public void drawCP5Button()
@@ -392,8 +386,11 @@ public class Main extends PApplet {
 						gameObjects.remove(o);
 					}
 				}
-
-
+				if(song.length() <= song.position())
+				{
+					player.health = 0;
+				}
+				
 				
 				break;
 			}
@@ -408,6 +405,7 @@ public class Main extends PApplet {
 						gameObjects.remove(o);
 					}
 				}
+				
 				
 				processGameObject();
 				counter = 0;
@@ -446,6 +444,7 @@ public class Main extends PApplet {
 				else
 				{
 					textFont(gameText, 10);
+					db.loadScores();
 					db.printScores();
 				}
 				
@@ -487,7 +486,7 @@ public class Main extends PApplet {
 			stats();
 		}//end gameLoop
 		
-	}//end game
+	}//end runGame
 	
 	public void selecter()
 	{

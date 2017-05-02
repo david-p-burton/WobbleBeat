@@ -12,13 +12,14 @@ import com.mysql.jdbc.Statement;
 
 import processing.core.PApplet;
 
-public class Database {
+public class Database 
+{
 	
 	//static String driver = "org.sqlite.JDBC";
 	private String driver = "org.sqlite.JDBC";
 	
 	//How do we d this so it wont be just local database?
-	private String url = "jdbc:mysql://localhost:3306/wobblebeatscores";
+	private String url = "jdbc:mysql://localhost:3309/wobblebeatscores";
 	private String user = "root";
 	private String password = "";
 	
@@ -27,7 +28,7 @@ public class Database {
 	private int playerScore;
 	private float playerTime;
 	
-	//used for processing libray
+	//used for processing library
 	PApplet p;
 	
 	ResultSet rs;
@@ -67,6 +68,7 @@ public class Database {
 	
 	public void loadScores()
 	{
+		listOfScores.clear();
 		try(Connection c = DriverManager.getConnection(url,user,password);
 				PreparedStatement ps = c.prepareStatement("select * from scores ORDER BY PlayerScore DESC"))
 		{

@@ -6,7 +6,7 @@ public class Player extends GameObject{
 	
 	
 	private String name;
-	private int health;
+	public int health;
 	public boolean isDead;
 	private int score;
 	private PApplet p;
